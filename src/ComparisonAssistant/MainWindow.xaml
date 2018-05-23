@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ComparisonAssistant"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="450" Width="1200"
         x:Name="FormMainMenu"
+        Loaded="FormMainMenu_Loaded"
         >
     <Grid>
         <StackPanel Orientation="Vertical">
@@ -17,20 +18,57 @@
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Автор"/>
-                    <ComboBox x:Name="ComboboxUsers" MinWidth="150"/>
+                    <ComboBox x:Name="ComboboxUsers" MinWidth="150" SelectionChanged="ComboboxUsers_SelectionChanged"/>
                 </StackPanel>
 
                 <Separator Width="1" Background="{x:Null}"/>
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Задача"/>
-                    <ComboBox MinWidth="150"/>
+                    <ComboBox x:Name="ComboboxTasks" MinWidth="150" SelectionChanged="ComboboxTasks_SelectionChanged" />
                 </StackPanel>
 
-                <Separator Width="1" Background="{x:Null}"/>
+                <Separator Width="5" Background="{x:Null}"/>
 
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="ButtonUpdateInfo" Content="Обновить данные" Click="ButtonUpdateInfo_Click"/>
+                    <Label x:Name="LabelUpdating" Content="Чтение файла логов..."/>
+                    <StackPanel x:Name="StackPanelDataFile" Orientation="Horizontal">
+                        <Label Content="Изменено:"/>
+                        <DatePicker x:Name="DatePickerEdited" MinWidth="107" >
+                            <DatePicker.Resources>
+                                <Style TargetType="DatePickerTextBox">
+                                    <Setter Property="Control.Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <TextBox Text="{Binding Path=SelectedDate, StringFormat={}{0:dd-MM-yyyy HH:mm}, RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Style>
+                            </DatePicker.Resources>
+                        </DatePicker>
+                        <Label Content="Обновлено:"/>
+                        <DatePicker x:Name="DatePickerUpdate" MinWidth="107" >
+                            <DatePicker.Resources>
+                                <Style TargetType="DatePickerTextBox">
+                                    <Setter Property="Control.Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <TextBox Text="{Binding Path=SelectedDate, StringFormat={}{0:dd-MM-yyyy HH:mm}, RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Style>
+                            </DatePicker.Resources>
+                        </DatePicker>
+                    </StackPanel>
                 </StackPanel>
                 
             </StackPanel>
@@ -39,10 +77,10 @@
             
             <StackPanel Orientation="Vertical">
                 <Label Content="Таблица изменений"/>
-                <DataGrid>
+                <DataGrid x:Name="DataGridChanges" IsReadOnly="True" AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Статус"/>
-                        <DataGridTextColumn Header="Измененный объект"/>
+                        <DataGridTextColumn Binding="{Binding Status}" Header="Статус"/>
+                        <DataGridTextColumn Binding="{Binding FileName}" Header="Измененный объект"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>

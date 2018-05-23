@@ -19,7 +19,7 @@ namespace ComparisonAssistant
         internal DateTime DateCreationFile { get; private set; }
         internal DateTime DateEditedFile { get; private set; }
 
-        internal DataCommit DataCommit { get; private set; }
+        //internal DataCommit DataCommit { get; private set; }
         internal List<User> Users { get; private set; }
         internal Dictionary<User, List<Task>> UserTasks { get; private set; }
 
@@ -47,9 +47,10 @@ namespace ComparisonAssistant
                 bool thisCommit;
 
                 User findedUser;
-                Task newTask;
+                Task userTask = null;
                 string userName;
                 string taskName;
+                string[] file;
 
                 while (!reader.EndOfStream)
                 {
@@ -58,30 +59,43 @@ namespace ComparisonAssistant
                     thisCommit = new Regex(Regex.Escape(_separatorCommit)).Matches(rowFile).Count == 2;
                     if (thisCommit)
                     {
-                        string[] commits = rowFile.Split(new string[] { _separatorCommit}, StringSplitOptions.RemoveEmptyEntries);
+                        string[] commits = rowFile.Split(new string[] { _separatorCommit }, StringSplitOptions.RemoveEmptyEntries);
 
                         if (commits.Count() == 3)
                         {
                             userName = commits[0];
-                            taskName = commits[1];
 
-                            findedUser = Users.FirstOrDefault(f => f.Name == userName);
-                            if (findedUser == null)
+                            foreach (Match item in new Regex("DEV-[0-9]*").Matches(commits[1]))
                             {
-                                findedUser = new User(userName);
-                                Users.Add(findedUser);
-                            }
+                                taskName = item.Value;
 
-                            newTask = new Task(commits[1]);
-                            if (UserTasks.ContainsKey(findedUser))
-                                UserTasks[findedUser].Add(newTask);
-                            else
-                                UserTasks.Add(findedUser, new List<Task>() { newTask });
+                                findedUser = Users.FirstOrDefault(f => f.Name == userName);
+                                if (findedUser == null)
+                                {
+                                    findedUser = new User(userName);
+                                    Users.Add(findedUser);
+                                }
+
+                                userTask = new Task(taskName);
+                                if (UserTasks.ContainsKey(findedUser))
+                                {
+                                    if (UserTasks[findedUser].FirstOrDefault(f => f.Name == taskName) == null)
+                                        UserTasks[findedUser].Add(userTask);
+                                }
+                                else
+                                    UserTasks.Add(findedUser, new List<Task>() { userTask });
+                            }
                         }
                     }
-                    else
+                    else if (!string.IsNullOrWhiteSpace(rowFile))
                     {
+                        if (userTask != null)
+                        {
+                            file = rowFile.Split(new string[] { "\tsrc" }, StringSplitOptions.None);
 
+                            if (file.Count() == 2)
+                                userTask.Files.Add(new ChangedFiles(file[0], file[1]));
+                        }
                     }
                 }
 

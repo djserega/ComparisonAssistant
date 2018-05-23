@@ -5,9 +5,15 @@ using System.Text;
 
 namespace ComparisonAssistant.Model
 {
-    internal class ChangedFiles
+    public class ChangedFiles
     {
-        internal string Status { get; set; }
-        internal string FileName { get; set; }
+        public string Status { get; set; }
+        public string FileName { get; set; }
+
+        public ChangedFiles(string status, string fileName)
+        {
+            Status = status;
+            FileName = fileName;
+        }
     }
 }
