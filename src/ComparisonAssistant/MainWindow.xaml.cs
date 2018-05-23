@@ -1,5 +1,7 @@
-﻿using System;
+﻿using ComparisonAssistant.Model;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -19,6 +21,9 @@ namespace ComparisonAssistant
     /// </summary>
     public partial class MainWindow : Window
     {
+        public List<User> Users { get; set; }
+        public Dictionary<User, List<Task>> UserTasks { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -26,6 +31,24 @@ namespace ComparisonAssistant
 
         private void ButtonUpdateInfo_Click(object sender, RoutedEventArgs e)
         {
+            Parser parser = null;
+            try
+            {
+                parser = new Parser();
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            if (parser == null)
+                return;
+
+            parser.ReadFileLog();
+
+            Users = parser.Users;
+
+            ComboboxUsers.ItemsSource = Users;
 
         }
     }

@@ -5,8 +5,18 @@ using System.Text;
 
 namespace ComparisonAssistant.Model
 {
-    internal class User
+    public class User
     {
-        internal string Name { get; set; }
+        public string Name { get; set; }
+
+        public User(string name)
+        {
+            Name = name;
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

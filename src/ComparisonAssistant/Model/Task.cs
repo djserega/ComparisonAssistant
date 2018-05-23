@@ -5,8 +5,14 @@ using System.Text;
 
 namespace ComparisonAssistant.Model
 {
-    internal class Task
+    public class Task
     {
-        internal string Name { get; set; }
+        public string Name { get; set; }
+
+        public Task(string name)
+        {
+            Name = name;
+        }
+
     }
 }

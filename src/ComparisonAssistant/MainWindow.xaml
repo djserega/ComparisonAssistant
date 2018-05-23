@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ComparisonAssistant"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        x:Name="FormMainMenu"
+        >
     <Grid>
         <StackPanel Orientation="Vertical">
 
@@ -15,7 +17,7 @@
 
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Автор"/>
-                    <ComboBox MinWidth="150"/>
+                    <ComboBox x:Name="ComboboxUsers" MinWidth="150"/>
                 </StackPanel>
 
                 <Separator Width="1" Background="{x:Null}"/>
