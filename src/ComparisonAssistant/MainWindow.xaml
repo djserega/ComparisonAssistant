@@ -45,7 +45,6 @@
 
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name="ButtonUpdateInfo" Content="Обновить данные" Background="LightSteelBlue" Click="ButtonUpdateInfo_Click"/>
-                    <Label x:Name="LabelUpdating" Content="Чтение файла логов..."/>
                     <StackPanel x:Name="StackPanelDataFile" Orientation="Horizontal">
                         <Label Content="Изменено:"/>
                         <DatePicker x:Name="DatePickerEdited" MinWidth="107" Background="LightSteelBlue">
@@ -88,6 +87,7 @@
                             </DatePicker.Resources>
                         </DatePicker>
                     </StackPanel>
+                    <Label x:Name="LabelUpdating" Content="Чтение файла логов..."/>
                 </StackPanel>
                 
             </StackPanel>
