@@ -48,7 +48,10 @@ namespace ComparisonAssistant
         private void ComboboxUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ComboboxUsers.SelectedItem is Model.User user)
+            {
                 ComboboxTasks.ItemsSource = UserTasks[user];
+                DataGridChanges.ItemsSource = null;
+            }
         }
 
         private void ComboboxTasks_SelectionChanged(object sender, SelectionChangedEventArgs e)
