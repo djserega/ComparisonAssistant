@@ -86,6 +86,9 @@
                                 </Style>
                             </DatePicker.Resources>
                         </DatePicker>
+                        <Separator Width="5" Background="{x:Null}"/>
+                        <Button x:Name="ButtonLockObject" Content="Захватить объекты" Background="LightSteelBlue" Click="ButtonLockObject_Click"/>
+                        <Separator Width="5" Background="{x:Null}"/>
                     </StackPanel>
                     <Label x:Name="LabelUpdating" Content="Чтение файла логов..."/>
                 </StackPanel>

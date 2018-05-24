@@ -95,17 +95,28 @@ namespace ComparisonAssistant
                 }
                 catch (FileNotFoundException ex)
                 {
-                    Task.Run(() => MessageBox.Show(ex.Message));
+                    Messages.Show(ex.Message);
                 }
 
                 if (parser == null)
                     return null;
 
                 parser.ReadFileLog();
-                
 
                 return parser;
             });
+        }
+
+        private void ButtonLockObject_Click(object sender, RoutedEventArgs e)
+        {
+            List<Model.ChangedFiles> listItem = new List<Model.ChangedFiles>();
+            foreach (Model.ChangedFiles item in DataGridChanges.SelectedItems)
+            {
+                listItem.Add(item);
+            }
+            
+            if (listItem.Count > 0)
+                new OneScript().LockObject(listItem.ToList());
         }
     }
 }
