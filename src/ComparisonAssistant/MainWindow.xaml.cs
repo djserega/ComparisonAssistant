@@ -74,7 +74,7 @@ namespace ComparisonAssistant
             ComboboxUsers.ItemsSource = Users;
             ComboboxTasks.ItemsSource = null;
             DataGridChanges.ItemsSource = null;
-            DatePickerEdited.SelectedDate = parser.DateEditedFile;
+            DatePickerEdited.SelectedDate = parser?.DateEditedFile;
             DatePickerUpdate.SelectedDate = DateTime.Now;
 
             LabelUpdating.Visibility = Visibility.Collapsed;
@@ -91,7 +91,7 @@ namespace ComparisonAssistant
                 }
                 catch (FileNotFoundException ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    Task.Run(() => MessageBox.Show(ex.Message));
                 }
 
                 if (parser == null)

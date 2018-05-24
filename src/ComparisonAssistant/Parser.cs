@@ -46,11 +46,14 @@ namespace ComparisonAssistant
                 string rowFile;
                 bool thisCommit;
 
-                User findedUser;
+                User findedUser = null;
                 Task userTask = null;
                 string userName;
                 string taskName;
                 string[] file;
+                string fileName;
+
+                List<Task> addedTasks = new List<Task>();
 
                 while (!reader.EndOfStream)
                 {
@@ -84,23 +87,38 @@ namespace ComparisonAssistant
                                 }
                                 else
                                     UserTasks.Add(findedUser, new List<Task>() { userTask });
+
+                                addedTasks.Add(userTask);
                             }
                         }
                     }
                     else if (!string.IsNullOrWhiteSpace(rowFile))
                     {
-                        if (userTask != null)
+                        if (findedUser != null)
                         {
                             file = rowFile.Split(new string[] { "\tsrc" }, StringSplitOptions.None);
 
                             if (file.Count() == 2)
-                                userTask.Files.Add(new ChangedFiles(file[0], file[1]));
+                            {
+                                fileName = file[1];
+
+                                foreach (Task addedTask in addedTasks)
+                                {
+                                    if (UserTasks[findedUser].Find(f => f.Name == addedTask.Name).Files.FirstOrDefault(f => f.FileName == fileName) == null)
+                                        UserTasks[findedUser].Find(f => f.Name == addedTask.Name).Files.Add(new ChangedFiles(file[0], fileName));
+                                }
+                            }
                         }
                     }
+                    else
+                        addedTasks.Clear();
                 }
 
+                foreach (var item in Users)
+                {
+                    UserTasks[item].Sort((a, b) => a.CompareName(b));
+                }
             }
         }
-
     }
 }

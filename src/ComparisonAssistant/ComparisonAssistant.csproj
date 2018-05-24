@@ -71,7 +71,6 @@
   <ItemGroup>
     <Compile Include="Model\ChangedFiles.cs" />
     <Compile Include="Model\Task.cs" />
-    <Compile Include="Model\DataCommit.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

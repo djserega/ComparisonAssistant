@@ -20,5 +20,13 @@ namespace ComparisonAssistant.Model
         {
             return Name;
         }
+
+        internal int CompareName(Task b)
+        {
+            int idA = Convert.ToInt32(Name.Replace("DEV-", ""));
+            int idB = Convert.ToInt32(b.Name.Replace("DEV-", ""));
+
+            return -idA.CompareTo(idB);
+        }
     }
 }
