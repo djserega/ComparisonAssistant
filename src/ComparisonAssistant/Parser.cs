@@ -177,6 +177,10 @@ namespace ComparisonAssistant
                 foreach (var item in Users)
                 {
                     UserTasks[item].Sort((a, b) => a.CompareName(b));
+                    for (int i = 0; i < UserTasks[item].Count; i++)
+                    {
+                        UserTasks[item][i].Files.Sort((a, b) => a.FileName.CompareTo(b.FileName));
+                    }
                 }
             }
         }
@@ -229,8 +233,5 @@ namespace ComparisonAssistant
         {
             return text.Replace(" ", "");
         }
-
-
-
     }
 }
