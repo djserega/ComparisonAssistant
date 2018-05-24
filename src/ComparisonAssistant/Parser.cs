@@ -19,9 +19,11 @@ namespace ComparisonAssistant
         internal DateTime DateCreationFile { get; private set; }
         internal DateTime DateEditedFile { get; private set; }
 
-        //internal DataCommit DataCommit { get; private set; }
         internal List<User> Users { get; private set; }
         internal Dictionary<User, List<Task>> UserTasks { get; private set; }
+
+        private List<string> _removePrefixFileName;
+        private Dictionary<string, string> _translateObject;
 
         internal Parser()
         {
@@ -35,8 +37,60 @@ namespace ComparisonAssistant
             DateCreationFile = fileInfo.CreationTime;
             DateEditedFile = fileInfo.LastWriteTime;
 
+            InitialParser();
+        }
+
+        private void InitialParser()
+        {
             Users = new List<User>();
             UserTasks = new Dictionary<User, List<Task>>();
+
+            _removePrefixFileName = new List<string>()
+            {
+                "src/cf/"
+            };
+
+            _translateObject = new Dictionary<string, string>()
+            {
+                { "Configuration", "Конфигурация"},
+                { "Language", "Язык"},
+                { "Subsystem", "Подсистема"},
+                { "StyleItem", "Элемент стиля"},
+                { "CommonPicture", "Общая картинка"},
+                { "Interface", "Интерфейс"},
+                { "SessionParameter", "Параметр сеанса"},
+                { "Role", "Роль"},
+                { "CommonTemplate", "Общий макет"},
+                { "FilterCriterion", "Критерий отбора"},
+                { "CommonModule", "Общий модуль"},
+                { "CommonAttribute", "Общий реквизит"},
+                { "ExchangePlan", "План обмена"},
+                { "XDTOPackage", "XDTO-пакет"},
+                { "WebService", "Web-сервис"},
+                { "EventSubscription", "Подписка на событие"},
+                { "ScheduledJob", "Регламентное задание"},
+                { "FunctionalOption", "Функциональная опция"},
+                { "FunctionalOptionsParameter", "Параметр функциональных опций"},
+                { "CommonCommand", "Общая команда"},
+                { "CommandGroup", "Группа команд"},
+                { "Constant", "Константа"},
+                { "CommonForm", "Общая форма"},
+                { "Catalog", "Справочник"},
+                { "Document", "Документ"},
+                { "DocumentNumerator", "Нумератор документов"},
+                { "Sequence", "Последовательность"},
+                { "DocumentJournal", "Журнал документов"},
+                { "Enum", "Перечисление"},
+                { "Report", "Отчет"},
+                { "DataProcessor", "Обработка"},
+                { "InformationRegister", "Регистр сведений"},
+                { "AccumulationRegister", "Регистр накопления"},
+                { "ChartOfCharacteristicTypes", "План видов характеристик"},
+                { "BusinessProcess", "Бизнес процесс"},
+                { "Task", "Задачи"},
+                { "ExternalDataSource", "Внешний источники данных"}
+            };
+
         }
 
         internal void ReadFileLog()
@@ -55,6 +109,7 @@ namespace ComparisonAssistant
 
                 List<Task> addedTasks = new List<Task>();
 
+                #region Read file log
                 while (!reader.EndOfStream)
                 {
                     rowFile = reader.ReadLine();
@@ -96,16 +151,20 @@ namespace ComparisonAssistant
                     {
                         if (findedUser != null)
                         {
-                            file = rowFile.Split(new string[] { "\tsrc" }, StringSplitOptions.None);
+                            file = rowFile.Split(new string[] { "\t" }, StringSplitOptions.None);
 
                             if (file.Count() == 2)
                             {
-                                fileName = file[1];
+                                fileName = GetNameObject(file[1]);
 
-                                foreach (Task addedTask in addedTasks)
+                                if (fileName != "VERSION"
+                                    && fileName != "renames.txt")
                                 {
-                                    if (UserTasks[findedUser].Find(f => f.Name == addedTask.Name).Files.FirstOrDefault(f => f.FileName == fileName) == null)
-                                        UserTasks[findedUser].Find(f => f.Name == addedTask.Name).Files.Add(new ChangedFiles(file[0], fileName));
+                                    foreach (Task addedTask in addedTasks)
+                                    {
+                                        if (UserTasks[findedUser].Find(f => f.Name == addedTask.Name).Files.FirstOrDefault(f => f.FileName == fileName) == null)
+                                            UserTasks[findedUser].Find(f => f.Name == addedTask.Name).Files.Add(new ChangedFiles(file[0], fileName));
+                                    }
                                 }
                             }
                         }
@@ -113,6 +172,7 @@ namespace ComparisonAssistant
                     else
                         addedTasks.Clear();
                 }
+                #endregion
 
                 foreach (var item in Users)
                 {
@@ -120,5 +180,57 @@ namespace ComparisonAssistant
                 }
             }
         }
+
+        private string GetNameObject(string fileName)
+        {
+            foreach (string prefix in _removePrefixFileName)
+            {
+                fileName = RemoveStartText(fileName, prefix);
+            }
+
+            foreach (KeyValuePair<string, string> item in _translateObject)
+            {
+                fileName = ReplaseStartText(fileName, item, true);
+                fileName = ReplaseStartText(fileName, item);
+            }
+
+            return fileName;
+        }
+
+        private string ReplaseStartText(string text, KeyValuePair<string, string> keyValue, bool addPostfix = false)
+        {
+            string find = keyValue.Key;
+            if (addPostfix)
+                find = find + "s";
+
+            if (text.StartsWith(find))
+                return keyValue.Value + text.Substring(find.Length);
+            else
+                return text;
+        }
+
+        private string RemoveStartText(string text, string find)
+        {
+            if (text.StartsWith(find))
+                return text.Substring(find.Length);
+            else
+                return text;
+        }
+
+        private string RemoveEndText(string text, string find)
+        {
+            if (text.EndsWith(find))
+                return text.Remove(text.Length - find.Length);
+            else
+                return text;
+        }
+
+        private string RemoveSpace(string text)
+        {
+            return text.Replace(" ", "");
+        }
+
+
+
     }
 }
