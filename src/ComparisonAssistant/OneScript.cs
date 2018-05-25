@@ -58,8 +58,6 @@ namespace ComparisonAssistant
             if (error)
                 return;
 
-            //Messages.Show("Начало процесса захвата объектов.");
-
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
@@ -73,7 +71,7 @@ namespace ComparisonAssistant
             process.StartInfo = startInfo;
             process.Start();
 
-            string parameters = @"""path configuration store"" ""user"" ""pass""";
+            string parameters = @"""connection string"" ""path configuration store"" ""full file name lock objects"" ""user"" ""pass""";
 
             using (StreamWriter writer = process.StandardInput)
             {
@@ -87,8 +85,6 @@ namespace ComparisonAssistant
                 if (reader.BaseStream.CanRead)
                     result = reader.ReadToEnd();
             }
-
-            //Messages.Show("Процесс захвата объектов завершен.");
         }
     }
 }
