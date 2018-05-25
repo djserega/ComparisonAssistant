@@ -11,11 +11,11 @@ namespace ComparisonAssistant
 {
     internal class Parser
     {
-        private readonly string _logFileName = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory,
-            "log.txt");
         private readonly string _separatorCommit = " --- ";
 
+        internal string LogFileName { get; } = Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory,
+            "log.txt");
         internal DateTime DateCreationFile { get; private set; }
         internal DateTime DateEditedFile { get; private set; }
 
@@ -27,7 +27,7 @@ namespace ComparisonAssistant
 
         internal Parser()
         {
-            FileInfo fileInfo = new FileInfo(_logFileName);
+            FileInfo fileInfo = new FileInfo(LogFileName);
 
             if (!fileInfo.Exists)
             {
@@ -95,7 +95,7 @@ namespace ComparisonAssistant
 
         internal void ReadFileLog()
         {
-            using (StreamReader reader = new StreamReader(_logFileName))
+            using (StreamReader reader = new StreamReader(LogFileName))
             {
                 string rowFile;
                 bool thisCommit;

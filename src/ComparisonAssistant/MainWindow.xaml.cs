@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace ComparisonAssistant
 {
@@ -22,6 +24,10 @@ namespace ComparisonAssistant
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        private AvailableNewFileLogEvents _availableNewFileLogEvents = new AvailableNewFileLogEvents();
+        private bool _availableNewFileLog = false;
+        private Watcher _watcher;
+
         public List<Model.User> Users { get; set; }
         public Dictionary<Model.User, List<Model.Task>> UserTasks { get; set; }
 
@@ -33,6 +39,19 @@ namespace ComparisonAssistant
 
             Users = new List<Model.User>();
             UserTasks = new Dictionary<Model.User, List<Model.Task>>();
+
+
+            _availableNewFileLogEvents.AvailableNewFileLog += _availableNewFileLogEvents_AvailableNewFileLog;
+
+            _watcher = new Watcher(_availableNewFileLogEvents);
+
+            SetVisibleAvailableNewFileLog();
+        }
+
+        private void _availableNewFileLogEvents_AvailableNewFileLog()
+        {
+            _availableNewFileLog = true;
+            SetVisibleAvailableNewFileLog();
         }
 
         private void FormMainMenu_Loaded(object sender, RoutedEventArgs e)
@@ -83,6 +102,9 @@ namespace ComparisonAssistant
 
             LabelUpdating.Visibility = Visibility.Collapsed;
             StackPanelDataFile.Visibility = Visibility.Visible;
+
+            _availableNewFileLog = false;
+            SetVisibleAvailableNewFileLog();
         }
 
         private async Task<Parser> LoadFileLogs()
@@ -117,6 +139,14 @@ namespace ComparisonAssistant
             
             if (listItem.Count > 0)
                 new OneScript().LockObject(listItem.ToList());
+        }
+
+        private void SetVisibleAvailableNewFileLog()
+        {
+            Dispatcher.Invoke(new ThreadStart(delegate
+            {
+                LabelAvailableNewFileLog.Visibility = _availableNewFileLog ? Visibility.Visible : Visibility.Collapsed;
+            }));
         }
     }
 }

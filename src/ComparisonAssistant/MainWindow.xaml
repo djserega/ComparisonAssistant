@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:ComparisonAssistant"
     mc:Ignorable="d"
-    Title="Comparsion Assistant" Height="450" Width="1200"
+    Title="Comparsion Assistant" Height="450" Width="1300"
     x:Name="FormMainMenu"
     Background="Teal"
     Loaded="FormMainMenu_Loaded">
@@ -87,10 +87,11 @@
                             </DatePicker.Resources>
                         </DatePicker>
                         <Separator Width="5" Background="{x:Null}"/>
-                        <Button x:Name="ButtonLockObject" Content="Захватить объекты" Background="LightSteelBlue" Click="ButtonLockObject_Click"/>
+                        <Button x:Name="ButtonLockObject" Content="Захватить объекты" Background="LightSteelBlue" Click="ButtonLockObject_Click" Visibility="Collapsed"/>
                         <Separator Width="5" Background="{x:Null}"/>
                     </StackPanel>
                     <Label x:Name="LabelUpdating" Content="Чтение файла логов..."/>
+                    <Label x:Name="LabelAvailableNewFileLog" Content="Доступен новый файл логов" Background="IndianRed"/>
                 </StackPanel>
                 
             </StackPanel>
