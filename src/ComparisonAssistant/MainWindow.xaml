@@ -20,9 +20,9 @@
             <Setter Property="Background" Value="LightSteelBlue"/>
         </Style>
     </Conrols:MetroWindow.Resources>
-    
+
     <Grid>
-        
+
         <StackPanel Orientation="Vertical" Margin="5,0,5,0">
 
             <Separator Height="1" Background="{x:Null}"/>
@@ -87,17 +87,57 @@
                             </DatePicker.Resources>
                         </DatePicker>
                         <Separator Width="5" Background="{x:Null}"/>
-                        <Button x:Name="ButtonLockObject" Content="Захватить объекты" Background="LightSteelBlue" Click="ButtonLockObject_Click" Visibility="Collapsed"/>
+                        <Button x:Name="ButtonLockObject" Content="Захватить объекты" Background="LightSteelBlue" Click="ButtonLockObject_Click"/>
                         <Separator Width="5" Background="{x:Null}"/>
                     </StackPanel>
                     <Label x:Name="LabelUpdating" Content="Чтение файла логов..."/>
                     <Label x:Name="LabelAvailableNewFileLog" Content="Доступен новый файл логов" Background="IndianRed"/>
                 </StackPanel>
-                
+
             </StackPanel>
-            
+
             <Separator Height="1" Background="{x:Null}"/>
-            
+
+            <Grid x:Name="GridParameters">
+                <Grid.Background>
+                    <SolidColorBrush Color="LightSteelBlue" Opacity="0.5"/>
+                </Grid.Background>
+                
+                <StackPanel Orientation="Vertical">
+
+                    <TextBlock>
+                        <Hyperlink x:Name="HyperLinkParameters" Foreground="DarkBlue" Click="HyperLinkParameters_Click">
+                            <TextBlock Text="Параметры подключения к хранилищу конфигурации"/>
+                        </Hyperlink>
+                    </TextBlock>
+
+                    <Separator Height="1" Background="{x:Null}"/>
+                    
+                    <StackPanel x:Name="StackPanelStorage" Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Сервер" MinWidth="110"/>
+                            <TextBox x:Name="TextBoxServer" MinWidth="220" Background="{x:Null}"/>
+                            <Label Content="База"/>
+                            <TextBox x:Name="TextBoxBase" MinWidth="150" Background="{x:Null}"/>
+                        </StackPanel>
+                        <Separator Width="1" Background="{x:Null}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Путь к хранилищу" MinWidth="110"/>
+                            <TextBox x:Name="TextBoxStoragePath" MinWidth="405" Background="{x:Null}"/>
+                            <Label Content="Пользователь"/>
+                            <TextBox x:Name="TextBoxStorageUser" MinWidth="150" Background="{x:Null}"/>
+                            <Label Content="Пароль"/>
+                            <PasswordBox x:Name="TextBoxStoragePass" MinWidth="150" Background="{x:Null}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    
+                    <Separator Height="1" Background="{x:Null}"/>
+                    
+                </StackPanel>
+            </Grid>
+
+            <Separator Height="1" Background="{x:Null}"/>
+
             <StackPanel Orientation="Vertical">
                 <Label Content="Таблица изменений"/>
                 <DataGrid x:Name="DataGridChanges" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False"
@@ -114,10 +154,10 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
-            
+
             <Separator Height="1" Background="{x:Null}"/>
-            
+
         </StackPanel>
-        
+
     </Grid>
 </Conrols:MetroWindow>

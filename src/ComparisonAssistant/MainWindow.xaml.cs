@@ -28,6 +28,8 @@ namespace ComparisonAssistant
         private bool _availableNewFileLog = false;
         private Watcher _watcher;
 
+        private bool _visibleStackPanelStorage = false;
+
         public List<Model.User> Users { get; set; }
         public Dictionary<Model.User, List<Model.Task>> UserTasks { get; set; }
 
@@ -56,6 +58,7 @@ namespace ComparisonAssistant
 
         private void FormMainMenu_Loaded(object sender, RoutedEventArgs e)
         {
+            SetVisibleStackPanelStorage();
             LoadFileLogsAsync();
         }
 
@@ -147,6 +150,33 @@ namespace ComparisonAssistant
             {
                 LabelAvailableNewFileLog.Visibility = _availableNewFileLog ? Visibility.Visible : Visibility.Collapsed;
             }));
+        }
+
+        private void HyperLinkParameters_Click(object sender, RoutedEventArgs e)
+        {
+            _visibleStackPanelStorage = !_visibleStackPanelStorage;
+
+            SetVisibleStackPanelStorage();
+        }
+
+        private void SetVisibleStackPanelStorage()
+        {
+            if (_visibleStackPanelStorage)
+            {
+                StackPanelStorage.Visibility = Visibility.Visible;
+                GridParameters.Background = new SolidColorBrush(Colors.LightSteelBlue)
+                {
+                    Opacity = 0.5
+                };
+            }
+            else
+            {
+                StackPanelStorage.Visibility = Visibility.Collapsed;
+                GridParameters.Background = new SolidColorBrush(Colors.LightSteelBlue)
+                {
+                    Opacity = 0
+                };
+            }
         }
     }
 }
