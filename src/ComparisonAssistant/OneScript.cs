@@ -58,26 +58,37 @@ namespace ComparisonAssistant
             if (error)
                 return;
 
-            Messages.Show("Начало процесса захвата объектов.");
+            //Messages.Show("Начало процесса захвата объектов.");
 
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
-                //WindowStyle = ProcessWindowStyle.Hidden,
+                WindowStyle = ProcessWindowStyle.Hidden,
                 FileName = "cmd.exe",
                 RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                StandardOutputEncoding = Encoding.GetEncoding(866),
                 UseShellExecute = false
             };
             process.StartInfo = startInfo;
             process.Start();
 
-            using (StreamWriter pWriter = process.StandardInput)
+            string parameters = @"""path configuration store"" ""user"" ""pass""";
+
+            using (StreamWriter writer = process.StandardInput)
             {
-                if (pWriter.BaseStream.CanWrite)
-                    pWriter.WriteLine($"{_fullNameOneScript} {_fullNameLockObject}");
+                if (writer.BaseStream.CanWrite)
+                    writer.WriteLine($"{ _fullNameOneScript} {_fullNameLockObject} {parameters}");
             }
 
-            Messages.Show("Процесс захвата объектов завершен.");
+            string result;
+            using (StreamReader reader = process.StandardOutput)
+            {
+                if (reader.BaseStream.CanRead)
+                    result = reader.ReadToEnd();
+            }
+
+            //Messages.Show("Процесс захвата объектов завершен.");
         }
     }
 }
