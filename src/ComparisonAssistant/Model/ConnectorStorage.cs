@@ -14,6 +14,24 @@ namespace ComparisonAssistant.Model
         internal string StorageUser { get; set; }
         internal string StoragePass { get; set; }
 
+        internal string ConnectionString
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Server)
+                    || string.IsNullOrWhiteSpace(Base))
+                    return string.Empty;
+
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append("/S");
+                stringBuilder.Append(Server);
+                stringBuilder.Append("\\");
+                stringBuilder.Append(Base);
+
+                return stringBuilder.ToString();
+            }
+        }
+
         internal bool CheckFilledParameters()
         {
             bool result = true;

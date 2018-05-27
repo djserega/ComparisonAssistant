@@ -15,8 +15,10 @@ namespace ComparisonAssistant
         private readonly string _prefixBin = "bin";
         private readonly string _fileNameOneScript = "oscript.exe";
         private readonly string _fileNameScriptLockObject = "lockobject.os";
+        private readonly string _fileNameFileNameListLockObject = "listobject.xml";
         private string _fullNameOneScript;
         private string _fullNameLockObject;
+        private string _fullNameListLockObject;
 
         internal OneScript()
         {
@@ -33,9 +35,15 @@ namespace ComparisonAssistant
                 _prefix,
                 _prefixBin,
                 _fileNameScriptLockObject);
+
+            _fullNameListLockObject = Path.Combine(
+                basePath,
+                _prefix,
+                _prefixBin,
+                _fileNameFileNameListLockObject);
         }
 
-        internal void LockObject(List<Model.ChangedFiles> changedFiles)
+        internal void LockObject(Model.ConnectorStorage connector, List<Model.ChangedFiles> changedFiles)
         {
             FileInfo fileInfo;
 
@@ -71,7 +79,12 @@ namespace ComparisonAssistant
             process.StartInfo = startInfo;
             process.Start();
 
-            string parameters = @"""connection string"" ""path configuration store"" ""full file name lock objects"" ""user"" ""pass""";
+            string parameters = $"" +
+                $"\"{connector.ConnectionString}\" " +
+                $"\"{connector.StoragePath}\" " +
+                $"\"{_fullNameListLockObject}\" " +
+                $"\"{connector.StorageUser}\" " +
+                $"\"{connector.StoragePass}\"";
 
             using (StreamWriter writer = process.StandardInput)
             {
