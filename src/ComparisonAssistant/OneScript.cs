@@ -92,12 +92,32 @@ namespace ComparisonAssistant
                     writer.WriteLine($"{ _fullNameOneScript} {_fullNameLockObject} {parameters}");
             }
 
-            string result;
+            string startDebug = "---------lock start---------";
+            string endDebug = "---------lock end---------";
+
+            string result = string.Empty;
+            bool addToResult = false;
+            string line;
             using (StreamReader reader = process.StandardOutput)
             {
                 if (reader.BaseStream.CanRead)
-                    result = reader.ReadToEnd();
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        line = reader.ReadLine();
+                        if (line.EndsWith(startDebug))
+                            addToResult = true;
+                        else if (line.EndsWith(endDebug))
+                            addToResult = false;
+                        else if (addToResult)
+                            result += (line + "\n");
+                    }
+                }
             }
+
+            if (!string.IsNullOrWhiteSpace(result))
+                Messages.Show(result);
+
         }
     }
 }
