@@ -9,7 +9,8 @@
     Title="Comparsion Assistant" Height="450" Width="1300"
     x:Name="FormMainMenu"
     Background="Teal"
-    Loaded="FormMainMenu_Loaded">
+    Loaded="FormMainMenu_Loaded"
+    Closed="FormMainMenu_Closed">
 
     <Conrols:MetroWindow.Resources>
         <Style x:Key="DataGridStyleColumnHeader" BasedOn="{StaticResource MetroDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">

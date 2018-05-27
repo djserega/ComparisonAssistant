@@ -11,9 +11,6 @@
     <Setting Name="StorageUser" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="StoragePass" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="StoragePath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

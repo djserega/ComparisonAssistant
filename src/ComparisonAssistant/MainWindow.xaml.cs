@@ -60,8 +60,14 @@ namespace ComparisonAssistant
 
         private void FormMainMenu_Loaded(object sender, RoutedEventArgs e)
         {
+            LoadUserSettings();
             SetVisibleStackPanelStorage();
             LoadFileLogsAsync();
+        }
+
+        private void FormMainMenu_Closed(object sender, EventArgs e)
+        {
+            SaveUserSettings();
         }
 
         private void ButtonUpdateInfo_Click(object sender, RoutedEventArgs e)
@@ -147,7 +153,7 @@ namespace ComparisonAssistant
             }
             
             if (listItem.Count > 0)
-                new OneScript().LockObject(listItem.ToList());
+                new OneScript().LockObject(connector, listItem.ToList());
         }
 
         private Model.ConnectorStorage GetConnectorStorage()
@@ -172,6 +178,8 @@ namespace ComparisonAssistant
 
         private string GetTextControl(TextBox textBox) => textBox.Text;
         private string GetTextControl(PasswordBox passwordBox) => passwordBox.Password;
+
+        private string SetTextControl(TextBox textBox, string text) => textBox.Text = text;
 
         private void SetVisibleAvailableNewFileLog()
         {
@@ -206,6 +214,25 @@ namespace ComparisonAssistant
                     Opacity = 0
                 };
             }
+        }
+
+        private void LoadUserSettings()
+        {
+            var properties = Properties.Settings.Default;
+            SetTextControl(TextBoxServer, properties.Server);
+            SetTextControl(TextBoxBase, properties.Base);
+            SetTextControl(TextBoxStoragePath, properties.StoragePath);
+            SetTextControl(TextBoxStorageUser, properties.StorageUser);
+        }
+        
+        private void SaveUserSettings()
+        {
+            var properties = Properties.Settings.Default;
+            properties.Server = GetTextControl(TextBoxServer);
+            properties.Base = GetTextControl(TextBoxBase);
+            properties.StoragePath = GetTextControl(TextBoxStoragePath);
+            properties.StorageUser = GetTextControl(TextBoxStorageUser);
+            properties.Save();
         }
     }
 }
