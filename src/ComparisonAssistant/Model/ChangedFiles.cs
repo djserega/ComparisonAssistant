@@ -127,7 +127,14 @@ namespace ComparisonAssistant.Model
                     ChangeModuleObject = true;
             }
             else if (FilePart2 == "Ext")
-                ChangeModuleObject = true;
+            {
+                if (FilePart3 == "Module.bsl")
+                    ChangeModuleObject = true;
+                else if (FilePart3 == "ManagerModule.bsl")
+                    ChangeModuleManaged = true;
+                else if (FilePart3 == "ObjectModule.bsl")
+                    ChangeModuleObject = true;
+            }
             else if (FilePart1.EndsWith(".xml"))
                 ChangeObject = true;
             else if (FilePart0.EndsWith(".xml"))
