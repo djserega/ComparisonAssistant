@@ -82,5 +82,17 @@ namespace ComparisonAssistant.Properties {
                 this["PathBase"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TypeConnector {
+            get {
+                return ((bool)(this["TypeConnector"]));
+            }
+            set {
+                this["TypeConnector"] = value;
+            }
+        }
     }
 }

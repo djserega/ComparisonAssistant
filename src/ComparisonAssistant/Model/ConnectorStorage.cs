@@ -8,8 +8,10 @@ namespace ComparisonAssistant.Model
 {
     internal class ConnectorStorage
     {
+        internal bool TypeConnection { get; set; } // true - server
         internal string Server { get; set; }
         internal string Base { get; set; }
+        internal string PathBase { get; set; }
         internal string StoragePath { get; set; }
         internal string StorageUser { get; set; }
         internal string StoragePass { get; set; }
@@ -18,17 +20,31 @@ namespace ComparisonAssistant.Model
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(Server)
-                    || string.IsNullOrWhiteSpace(Base))
-                    return string.Empty;
+                if (TypeConnection)
+                {
+                    if (string.IsNullOrWhiteSpace(Server)
+                        || string.IsNullOrWhiteSpace(Base))
+                        return string.Empty;
 
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.Append("/S");
-                stringBuilder.Append(Server);
-                stringBuilder.Append("\\");
-                stringBuilder.Append(Base);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.Append("/S");
+                    stringBuilder.Append(Server);
+                    stringBuilder.Append("\\");
+                    stringBuilder.Append(Base);
 
-                return stringBuilder.ToString();
+                    return stringBuilder.ToString();
+                }
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(PathBase))
+                        return string.Empty;
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.Append("/F");
+                    stringBuilder.Append(PathBase);
+
+                    return stringBuilder.ToString();
+                }
             }
         }
 
@@ -36,9 +52,11 @@ namespace ComparisonAssistant.Model
         {
             bool result = true;
 
-            if (string.IsNullOrEmpty(Server))
+            if (TypeConnection && string.IsNullOrEmpty(Server))
                 result = false;
-            else if (string.IsNullOrEmpty(Base))
+            else if (TypeConnection && string.IsNullOrEmpty(Base))
+                result = false;
+            else if (!TypeConnection && string.IsNullOrEmpty(PathBase))
                 result = false;
             else if (string.IsNullOrEmpty(StoragePath))
                 result = false;

@@ -103,7 +103,7 @@
                 <Grid.Background>
                     <SolidColorBrush Color="LightSteelBlue" Opacity="0.5"/>
                 </Grid.Background>
-                
+
                 <StackPanel Orientation="Vertical">
 
                     <TextBlock>
@@ -113,17 +113,25 @@
                     </TextBlock>
 
                     <Separator Height="1" Background="{x:Null}"/>
-                    
+
                     <StackPanel x:Name="StackPanelStorage" Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="Сервер" MinWidth="110"/>
-                            <TextBox x:Name="TextBoxServer" MinWidth="220" Background="{x:Null}"/>
-                            <Label Content="База"/>
-                            <TextBox x:Name="TextBoxBase" MinWidth="150" Background="{x:Null}"/>
+                            <Label Content="Тип подключения (сервер)" MinWidth="160"/>
+                            <CheckBox x:Name="CheckBoxTypeConnection" Background="{x:Null}" Click="CheckBoxTypeConnection_Click" />
+                            <StackPanel x:Name="StackPanelTypeServer" Orientation="Horizontal" Visibility="Collapsed">
+                                <Label Content="Сервер"/>
+                                <TextBox x:Name="TextBoxServer" MinWidth="220" Background="{x:Null}"/>
+                                <Label Content="База"/>
+                                <TextBox x:Name="TextBoxBase" MinWidth="150" Background="{x:Null}"/>
+                            </StackPanel>
+                            <StackPanel x:Name="StackPanelTypeFile" Orientation="Horizontal">
+                                <Label Content="Путь к каталогу" MinWidth="110"/>
+                                <TextBox x:Name="TextBoxPathBase" MinWidth="405" Background="{x:Null}"/>
+                            </StackPanel>
                         </StackPanel>
                         <Separator Width="1" Background="{x:Null}"/>
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="Путь к хранилищу" MinWidth="110"/>
+                            <Label Content="Путь к хранилищу" MinWidth="160"/>
                             <TextBox x:Name="TextBoxStoragePath" MinWidth="405" Background="{x:Null}"/>
                             <Label Content="Пользователь"/>
                             <TextBox x:Name="TextBoxStorageUser" MinWidth="150" Background="{x:Null}"/>
@@ -131,9 +139,9 @@
                             <PasswordBox x:Name="TextBoxStoragePass" MinWidth="150" Background="{x:Null}"/>
                         </StackPanel>
                     </StackPanel>
-                    
+
                     <Separator Height="1" Background="{x:Null}"/>
-                    
+
                 </StackPanel>
             </Grid>
 

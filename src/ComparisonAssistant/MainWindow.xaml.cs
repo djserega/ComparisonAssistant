@@ -29,6 +29,7 @@ namespace ComparisonAssistant
         private Watcher _watcher;
 
         private bool _visibleStackPanelStorage = true;
+        private bool _visibleTypeConnection = false;
 
         public List<Model.User> Users { get; set; }
         public Dictionary<Model.User, List<Model.Task>> UserTasks { get; set; }
@@ -50,6 +51,7 @@ namespace ComparisonAssistant
             DataGridChanges.Items.Clear();
 
             SetVisibleAvailableNewFileLog();
+            SetVisibleTypeConnection();
         }
 
         private void _availableNewFileLogEvents_AvailableNewFileLog()
@@ -160,8 +162,10 @@ namespace ComparisonAssistant
         {
             var connector = new Model.ConnectorStorage()
             {
+                TypeConnection = GetTextControl(CheckBoxTypeConnection),
                 Server = GetTextControl(TextBoxServer),
                 Base = GetTextControl(TextBoxBase),
+                PathBase = GetTextControl(TextBoxPathBase),
                 StoragePath = GetTextControl(TextBoxStoragePath),
                 StorageUser = GetTextControl(TextBoxStorageUser),
                 StoragePass = GetTextControl(TextBoxStoragePass)
@@ -178,8 +182,10 @@ namespace ComparisonAssistant
 
         private string GetTextControl(TextBox textBox) => textBox.Text;
         private string GetTextControl(PasswordBox passwordBox) => passwordBox.Password;
+        private bool GetTextControl(CheckBox checkBox) => checkBox.IsChecked ?? false;
 
-        private string SetTextControl(TextBox textBox, string text) => textBox.Text = text;
+        private void SetTextControl(TextBox textBox, string text) => textBox.Text = text;
+        private void SetTextControl(CheckBox checkBox, bool value) => checkBox.IsChecked = value;
 
         private void SetVisibleAvailableNewFileLog()
         {
@@ -219,8 +225,10 @@ namespace ComparisonAssistant
         private void LoadUserSettings()
         {
             var properties = Properties.Settings.Default;
+            SetTextControl(CheckBoxTypeConnection, properties.TypeConnector);
             SetTextControl(TextBoxServer, properties.Server);
             SetTextControl(TextBoxBase, properties.Base);
+            SetTextControl(TextBoxPathBase, properties.PathBase);
             SetTextControl(TextBoxStoragePath, properties.StoragePath);
             SetTextControl(TextBoxStorageUser, properties.StorageUser);
         }
@@ -228,11 +236,25 @@ namespace ComparisonAssistant
         private void SaveUserSettings()
         {
             var properties = Properties.Settings.Default;
+            properties.TypeConnector = GetTextControl(CheckBoxTypeConnection);
             properties.Server = GetTextControl(TextBoxServer);
             properties.Base = GetTextControl(TextBoxBase);
+            properties.PathBase = GetTextControl(TextBoxPathBase);
             properties.StoragePath = GetTextControl(TextBoxStoragePath);
             properties.StorageUser = GetTextControl(TextBoxStorageUser);
             properties.Save();
+        }
+
+        private void CheckBoxTypeConnection_Click(object sender, RoutedEventArgs e)
+        {
+            _visibleTypeConnection = CheckBoxTypeConnection.IsChecked.HasValue && CheckBoxTypeConnection.IsChecked.Value;
+            SetVisibleTypeConnection();
+        }
+
+        private void SetVisibleTypeConnection()
+        {
+            StackPanelTypeServer.Visibility = _visibleTypeConnection ? Visibility.Visible : Visibility.Collapsed;
+            StackPanelTypeFile.Visibility = _visibleTypeConnection ? Visibility.Collapsed: Visibility.Visible;
         }
     }
 }
