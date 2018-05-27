@@ -28,7 +28,7 @@ namespace ComparisonAssistant
         private bool _availableNewFileLog = false;
         private Watcher _watcher;
 
-        private bool _visibleStackPanelStorage = false;
+        private bool _visibleStackPanelStorage = true;
 
         public List<Model.User> Users { get; set; }
         public Dictionary<Model.User, List<Model.Task>> UserTasks { get; set; }
@@ -46,6 +46,8 @@ namespace ComparisonAssistant
             _availableNewFileLogEvents.AvailableNewFileLog += _availableNewFileLogEvents_AvailableNewFileLog;
 
             _watcher = new Watcher(_availableNewFileLogEvents);
+
+            DataGridChanges.Items.Clear();
 
             SetVisibleAvailableNewFileLog();
         }
@@ -134,6 +136,10 @@ namespace ComparisonAssistant
 
         private void ButtonLockObject_Click(object sender, RoutedEventArgs e)
         {
+            Model.ConnectorStorage connector = GetConnectorStorage();
+            if (connector == null)
+                return;
+
             List<Model.ChangedFiles> listItem = new List<Model.ChangedFiles>();
             foreach (Model.ChangedFiles item in DataGridChanges.SelectedItems)
             {
@@ -143,6 +149,29 @@ namespace ComparisonAssistant
             if (listItem.Count > 0)
                 new OneScript().LockObject(listItem.ToList());
         }
+
+        private Model.ConnectorStorage GetConnectorStorage()
+        {
+            var connector = new Model.ConnectorStorage()
+            {
+                Server = GetTextControl(TextBoxServer),
+                Base = GetTextControl(TextBoxBase),
+                StoragePath = GetTextControl(TextBoxStoragePath),
+                StorageUser = GetTextControl(TextBoxStorageUser),
+                StoragePass = GetTextControl(TextBoxStoragePass)
+            };
+
+            if (connector.CheckFilledParameters())
+                return connector;
+            else
+            {
+                Messages.Show("Один или несколько параметров подключения не заполнены.");
+                return null;
+            }
+        }
+
+        private string GetTextControl(TextBox textBox) => textBox.Text;
+        private string GetTextControl(PasswordBox passwordBox) => passwordBox.Password;
 
         private void SetVisibleAvailableNewFileLog()
         {
@@ -154,9 +183,9 @@ namespace ComparisonAssistant
 
         private void HyperLinkParameters_Click(object sender, RoutedEventArgs e)
         {
-            _visibleStackPanelStorage = !_visibleStackPanelStorage;
-
-            SetVisibleStackPanelStorage();
+            //_visibleStackPanelStorage = !_visibleStackPanelStorage;
+            //
+            //SetVisibleStackPanelStorage();
         }
 
         private void SetVisibleStackPanelStorage()

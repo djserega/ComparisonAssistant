@@ -138,18 +138,18 @@
 
             <Separator Height="1" Background="{x:Null}"/>
 
-            <StackPanel Orientation="Vertical">
+            <StackPanel x:Name="StackPanelChanges" Orientation="Vertical">
                 <Label Content="Таблица изменений"/>
-                <DataGrid x:Name="DataGridChanges" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeRows="False"
+                <DataGrid x:Name="DataGridChanges" IsReadOnly="True" AutoGenerateColumns="False" 
+                          CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" CanUserSortColumns="False"
                           ColumnHeaderStyle="{StaticResource DataGridStyleColumnHeader}"
-                          Height="{Binding ElementName=FormMainMenu, Path=ActualHeight, Converter={local:ElementsFormConverter}, ConverterParameter='97'}">
+                          Height="{Binding ElementName=FormMainMenu, Path=ActualHeight, Converter={local:ElementsFormConverter}, ConverterParameter='187'}">>
                     <DataGrid.Background>
                         <SolidColorBrush Color="White" Opacity="0.25"/>
                     </DataGrid.Background>
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Status}" Header="Статус" CanUserResize="False">
-                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Status}" Header="Статус" CanUserResize="False"/>
                         <DataGridTextColumn Binding="{Binding FileName}" Header="Измененный объект"/>
                     </DataGrid.Columns>
                 </DataGrid>
