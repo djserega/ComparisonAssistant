@@ -24,15 +24,14 @@ namespace ComparisonAssistant
 
         private List<string> _removePrefixFileName;
         private Dictionary<string, string> _translateObject;
+        private List<string> _listSkipFiles;
 
         internal Parser()
         {
             FileInfo fileInfo = new FileInfo(LogFileName);
 
             if (!fileInfo.Exists)
-            {
                 throw new FileNotFoundException("Файл логов не найден.");
-            }
 
             DateCreationFile = fileInfo.CreationTime;
             DateEditedFile = fileInfo.LastWriteTime;
@@ -50,47 +49,15 @@ namespace ComparisonAssistant
                 "src/cf/"
             };
 
-            _translateObject = new Dictionary<string, string>()
-            {
-                { "Configuration", "Конфигурация"},
-                { "Language", "Язык"},
-                { "Subsystem", "Подсистема"},
-                { "StyleItem", "Элемент стиля"},
-                { "CommonPicture", "Общая картинка"},
-                { "Interface", "Интерфейс"},
-                { "SessionParameter", "Параметр сеанса"},
-                { "Role", "Роль"},
-                { "CommonTemplate", "Общий макет"},
-                { "FilterCriterion", "Критерий отбора"},
-                { "CommonModule", "Общий модуль"},
-                { "CommonAttribute", "Общий реквизит"},
-                { "ExchangePlan", "План обмена"},
-                { "XDTOPackage", "XDTO-пакет"},
-                { "WebService", "Web-сервис"},
-                { "EventSubscription", "Подписка на событие"},
-                { "ScheduledJob", "Регламентное задание"},
-                { "FunctionalOption", "Функциональная опция"},
-                { "FunctionalOptionsParameter", "Параметр функциональных опций"},
-                { "CommonCommand", "Общая команда"},
-                { "CommandGroup", "Группа команд"},
-                { "Constant", "Константа"},
-                { "CommonForm", "Общая форма"},
-                { "Catalog", "Справочник"},
-                { "Document", "Документ"},
-                { "DocumentNumerator", "Нумератор документов"},
-                { "Sequence", "Последовательность"},
-                { "DocumentJournal", "Журнал документов"},
-                { "Enum", "Перечисление"},
-                { "Report", "Отчет"},
-                { "DataProcessor", "Обработка"},
-                { "InformationRegister", "Регистр сведений"},
-                { "AccumulationRegister", "Регистр накопления"},
-                { "ChartOfCharacteristicTypes", "План видов характеристик"},
-                { "BusinessProcess", "Бизнес процесс"},
-                { "Task", "Задачи"},
-                { "ExternalDataSource", "Внешний источники данных"}
-            };
+            _translateObject = new TranslateObject().DictionaryObjct;
 
+            _listSkipFiles = new List<string>()
+            {
+                "VERSION",
+                "renames.txt",
+                "AUTHORS",
+                ".gitignore"
+            };
         }
 
         internal void ReadFileLog()
@@ -157,13 +124,14 @@ namespace ComparisonAssistant
                             {
                                 fileName = GetNameObject(file[1]);
 
-                                if (fileName != "VERSION"
-                                    && fileName != "renames.txt")
+                                if (_listSkipFiles.FirstOrDefault(f => f == fileName) == null)
                                 {
                                     foreach (Task addedTask in addedTasks)
                                     {
                                         if (UserTasks[findedUser].Find(f => f.Name == addedTask.Name).Files.FirstOrDefault(f => f.FileName == fileName) == null)
+                                        {
                                             UserTasks[findedUser].Find(f => f.Name == addedTask.Name).Files.Add(new ChangedFiles(file[0], fileName));
+                                        }
                                     }
                                 }
                             }
@@ -174,12 +142,24 @@ namespace ComparisonAssistant
                 }
                 #endregion
 
-                foreach (var item in Users)
+                foreach (User item in Users)
                 {
                     UserTasks[item].Sort((a, b) => a.CompareName(b));
                     for (int i = 0; i < UserTasks[item].Count; i++)
                     {
                         UserTasks[item][i].Files.Sort((a, b) => a.FileName.CompareTo(b.FileName));
+                    }
+                }
+
+                foreach (User item in Users)
+                {
+                    for (int i = 0; i < UserTasks[item].Count; i++)
+                    {
+                        List<ChangedFiles> changedFiles = new List<ChangedFiles>();
+                        foreach (ChangedFiles elementFile in UserTasks[item][i].Files)
+                        {
+                            changedFiles.Add(elementFile);
+                        }
                     }
                 }
             }

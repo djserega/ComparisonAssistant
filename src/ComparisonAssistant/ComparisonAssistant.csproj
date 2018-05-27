@@ -72,6 +72,7 @@
     </ApplicationDefinition>
     <Compile Include="Events.cs" />
     <Compile Include="Model\ConnectorStorage.cs" />
+    <Compile Include="Model\TranslateObject.cs" />
     <Compile Include="Watcher.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

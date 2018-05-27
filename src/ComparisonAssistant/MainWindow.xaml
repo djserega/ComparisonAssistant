@@ -160,6 +160,10 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Status}" Header="Статус" CanUserResize="False"/>
                         <DataGridTextColumn Binding="{Binding FileName}" Header="Измененный объект"/>
+                        <DataGridCheckBoxColumn Binding="{Binding ChangeObject, Mode=OneWay}" Header="Объект"/>
+                        <DataGridCheckBoxColumn Binding="{Binding ChangeModuleObject, Mode=OneWay}" Header="Модуль объекта"/>
+                        <DataGridCheckBoxColumn Binding="{Binding ChangeModuleManaged, Mode=OneWay}" Header="Модуль менеджера"/>
+                        <DataGridCheckBoxColumn Binding="{Binding ChangeTemplate, Mode=OneWay}" Header="Шаблоны"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
