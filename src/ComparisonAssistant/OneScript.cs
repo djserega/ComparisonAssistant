@@ -66,6 +66,9 @@ namespace ComparisonAssistant
             if (error)
                 return;
 
+            if (!CreateFileLockObject(changedFiles))
+                return;
+
             Process process = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
@@ -119,5 +122,12 @@ namespace ComparisonAssistant
                 Messages.Show(result);
 
         }
+
+        private bool CreateFileLockObject(List<Model.ChangedFiles> changedFiles)
+        {
+
+            return true;
+        }
+
     }
 }
