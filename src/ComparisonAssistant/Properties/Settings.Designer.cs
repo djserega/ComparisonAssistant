@@ -70,5 +70,17 @@ namespace ComparisonAssistant.Properties {
                 this["StoragePath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PathBase {
+            get {
+                return ((string)(this["PathBase"]));
+            }
+            set {
+                this["PathBase"] = value;
+            }
+        }
     }
 }
