@@ -169,49 +169,17 @@ namespace ComparisonAssistant
         {
             foreach (string prefix in _removePrefixFileName)
             {
-                fileName = RemoveStartText(fileName, prefix);
+                fileName = fileName.RemoveStartText(prefix);
             }
 
             foreach (KeyValuePair<string, string> item in _translateObject)
             {
-                fileName = ReplaseStartText(fileName, item, true);
-                fileName = ReplaseStartText(fileName, item);
+                fileName = fileName.ReplaseStartText(item, true);
+                fileName = fileName.ReplaseStartText(item);
             }
 
             return fileName;
         }
 
-        private string ReplaseStartText(string text, KeyValuePair<string, string> keyValue, bool addPostfix = false)
-        {
-            string find = keyValue.Key;
-            if (addPostfix)
-                find = find + "s";
-
-            if (text.StartsWith(find))
-                return keyValue.Value + text.Substring(find.Length);
-            else
-                return text;
-        }
-
-        private string RemoveStartText(string text, string find)
-        {
-            if (text.StartsWith(find))
-                return text.Substring(find.Length);
-            else
-                return text;
-        }
-
-        private string RemoveEndText(string text, string find)
-        {
-            if (text.EndsWith(find))
-                return text.Remove(text.Length - find.Length);
-            else
-                return text;
-        }
-
-        private string RemoveSpace(string text)
-        {
-            return text.Replace(" ", "");
-        }
     }
 }
