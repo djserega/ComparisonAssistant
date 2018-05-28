@@ -38,6 +38,9 @@ namespace ComparisonAssistant.Model
         internal string FilePart8 { get; private set; }
         internal string FilePart9 { get; private set; }
 
+        internal bool EndFileXML { get; private set; }
+        internal bool EndFileBSL { get; private set; }
+
         public ChangedFiles(string status, string fileName)
         {
             Status = status;
@@ -45,6 +48,12 @@ namespace ComparisonAssistant.Model
         }
 
         private void ParseFileName()
+        {
+            SplitIntoParts();
+            CheckChangedType();
+        }
+
+        private void SplitIntoParts()
         {
             string[] fileNameParts = _fileName.Split('/');
             for (int i = 0; i < 10; i++)
@@ -89,7 +98,10 @@ namespace ComparisonAssistant.Model
                         break;
                 }
             }
+        }
 
+        private void CheckChangedType()
+        {
             if (FilePart2 == "Forms")
             {
                 if (FilePart4 == "Ext")
