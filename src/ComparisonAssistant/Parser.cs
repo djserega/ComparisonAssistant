@@ -84,6 +84,7 @@ namespace ComparisonAssistant
                     thisCommit = new Regex(Regex.Escape(_separatorCommit)).Matches(rowFile).Count == 2;
                     if (thisCommit)
                     {
+                        #region Read commit
                         string[] commits = rowFile.Split(new string[] { _separatorCommit }, StringSplitOptions.RemoveEmptyEntries);
 
                         if (commits.Count() == 3)
@@ -113,9 +114,11 @@ namespace ComparisonAssistant
                                 addedTasks.Add(userTask);
                             }
                         }
+                        #endregion
                     }
                     else if (!string.IsNullOrWhiteSpace(rowFile))
                     {
+                        #region Read log
                         if (findedUser != null)
                         {
                             file = rowFile.Split(new string[] { "\t" }, StringSplitOptions.None);
@@ -135,7 +138,8 @@ namespace ComparisonAssistant
                                     }
                                 }
                             }
-                        }
+                        } 
+                        #endregion
                     }
                     else
                         addedTasks.Clear();
