@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -35,6 +36,10 @@ namespace ComparisonAssistant
         public Dictionary<Model.User, List<Model.Task>> UserTasks { get; set; }
 
         public DateTime DateEdited { get; set; }
+        public DateTime DateUpdated { get; set; }
+
+        public DateTime FilterDateStart { get; set; }
+        public DateTime FilterDateEnd { get; set; }
 
         public MainWindow()
         {
@@ -42,7 +47,6 @@ namespace ComparisonAssistant
 
             Users = new List<Model.User>();
             UserTasks = new Dictionary<Model.User, List<Model.Task>>();
-
 
             _availableNewFileLogEvents.AvailableNewFileLog += _availableNewFileLogEvents_AvailableNewFileLog;
 
@@ -52,6 +56,19 @@ namespace ComparisonAssistant
 
             SetVisibleAvailableNewFileLog();
             SetVisibleTypeConnection();
+
+
+            FilterDateStart = DateTime.Now.StartDay();
+            FilterDateEnd = DateTime.Now.EndDay();
+
+            XmlLanguage currentDateLanguage = XmlLanguage.GetLanguage(Thread.CurrentThread.CurrentCulture.Name);
+
+            DatePickerEdited.Language = currentDateLanguage;
+            DatePickerUpdate.Language = currentDateLanguage;
+            DatePickerFilterStart.Language = currentDateLanguage;
+            DatePickerFilterEnd.Language = currentDateLanguage;
+
+            DataContext = this;
         }
 
         private void _availableNewFileLogEvents_AvailableNewFileLog()
@@ -110,11 +127,14 @@ namespace ComparisonAssistant
             ComboboxUsers.ItemsSource = Users;
             ComboboxTasks.ItemsSource = null;
             DataGridChanges.ItemsSource = null;
-            DatePickerEdited.SelectedDate = parser?.DateEditedFile;
-            DatePickerUpdate.SelectedDate = DateTime.Now;
+            DateEdited = parser == null ? DateTime.MinValue : parser.DateEditedFile;
+            DateUpdated = DateTime.Now;
 
             LabelUpdating.Visibility = Visibility.Collapsed;
             StackPanelDataFile.Visibility = Visibility.Visible;
+
+            BindingOperations.GetBindingExpression(DatePickerEdited, DatePicker.SelectedDateProperty).UpdateTarget();
+            BindingOperations.GetBindingExpression(DatePickerUpdate, DatePicker.SelectedDateProperty).UpdateTarget();
 
             _availableNewFileLog = false;
             SetVisibleAvailableNewFileLog();
@@ -136,6 +156,8 @@ namespace ComparisonAssistant
                 if (parser == null)
                     return null;
 
+                parser.DateMin = FilterDateStart;
+                parser.DateMax = FilterDateEnd;
                 parser.ReadFileLog();
 
                 return parser;
@@ -255,6 +277,16 @@ namespace ComparisonAssistant
         {
             StackPanelTypeServer.Visibility = _visibleTypeConnection ? Visibility.Visible : Visibility.Collapsed;
             StackPanelTypeFile.Visibility = _visibleTypeConnection ? Visibility.Collapsed: Visibility.Visible;
+        }
+
+        private void TextBlockPanelFilter_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void TextBlockParameters_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }
