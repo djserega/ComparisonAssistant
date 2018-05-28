@@ -108,9 +108,10 @@
             <StackPanel Orientation="Vertical">
 
                 <StackPanel Orientation="Horizontal">
-                    <Button>
+                    <Button x:Name="ButtonFilter" Click="ButtonFilter_Click">
                         <Button.Style>
-                            <Style BasedOn="{StaticResource MetroButton}" TargetType="{x:Type Button}">
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Width" Value="50"/>
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type Button}">
@@ -118,8 +119,7 @@
                                                 <Border.Background>
                                                     <SolidColorBrush Color="LightSteelBlue" Opacity="0.5"/>
                                                 </Border.Background>
-                                                <Button x:Name="ButtonFilter" Content="Фильтр" Background="{x:Null}" BorderBrush="{x:Null}" FontWeight="Normal"
-                                                        Click="ButtonFilter_Click"/>
+                                                <TextBlock Text="Фильтр" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                             </Border>
                                         </ControlTemplate>
                                     </Setter.Value>
@@ -127,18 +127,19 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    <Button>
+                    <Button x:Name="ButtonParameters" Click="ButtonParameters_Click">
                         <Button.Style>
-                            <Style BasedOn="{StaticResource MetroButton}" TargetType="{x:Type Button}">
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Width" Value="310"/>
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type Button}">
-                                            <Border x:Name="BorderParameters" CornerRadius="10,10,0,0" BorderThickness="0.3">
+                                            <Border x:Name="BorderParameters" CornerRadius="5,5,0,0" BorderThickness="0.3">
                                                 <Border.Background>
                                                     <SolidColorBrush Color="LightSteelBlue" Opacity="0.5"/>
                                                 </Border.Background>
-                                                <Button x:Name="ButtonParameters" Content="Параметры подключения к хранилищу конфигурации" Background="{x:Null}" BorderBrush="{x:Null}" FontWeight="Normal"
-                                                        Click="ButtonParameters_Click"/>
+                                                <TextBlock Text="Параметры подключения к хранилищу конфигурации"
+                                                        Background="{x:Null}" FontWeight="Normal" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                             </Border>
                                         </ControlTemplate>
                                     </Setter.Value>
