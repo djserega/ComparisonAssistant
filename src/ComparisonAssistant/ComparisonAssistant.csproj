@@ -70,7 +70,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AdditionsString.cs" />
+    <Compile Include="Additions\AdditionsDateTime.cs" />
+    <Compile Include="Additions\AdditionsString.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="Model\ConnectorStorage.cs" />
     <Compile Include="Model\TranslateObject.cs" />
