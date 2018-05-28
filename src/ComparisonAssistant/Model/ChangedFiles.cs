@@ -41,6 +41,8 @@ namespace ComparisonAssistant.Model
         internal bool EndFileXML { get; private set; }
         internal bool EndFileBSL { get; private set; }
 
+        internal int LastFilledPart { get; private set; }
+
         public ChangedFiles(string status, string fileName)
         {
             Status = status;
@@ -49,9 +51,15 @@ namespace ComparisonAssistant.Model
 
         private void ParseFileName()
         {
+            CheckEndingFileName();
             SplitIntoParts();
             CheckChangedType();
-            CheckEndingFileName();
+        }
+
+        private void CheckEndingFileName()
+        {
+            EndFileBSL = FileName.EndsWith(".bsl");
+            EndFileXML = FileName.EndsWith(".xml");
         }
 
         private void SplitIntoParts()
@@ -61,7 +69,10 @@ namespace ComparisonAssistant.Model
             {
                 string parts;
                 if (fileNameParts.Count() > i)
+                {
                     parts = fileNameParts[i];
+                    LastFilledPart = i;
+                }
                 else
                     parts = string.Empty;
 
@@ -154,10 +165,5 @@ namespace ComparisonAssistant.Model
                 ChangeObject = true;
         }
 
-        private void CheckEndingFileName()
-        {
-            EndFileBSL = FileName.EndsWith(".bsl");
-            EndFileXML = FileName.EndsWith(".xml");
-        }
     }
 }
