@@ -51,6 +51,7 @@ namespace ComparisonAssistant.Model
         {
             SplitIntoParts();
             CheckChangedType();
+            CheckEndingFileName();
         }
 
         private void SplitIntoParts()
@@ -151,6 +152,12 @@ namespace ComparisonAssistant.Model
                 ChangeObject = true;
             else if (FilePart0.EndsWith(".xml"))
                 ChangeObject = true;
+        }
+
+        private void CheckEndingFileName()
+        {
+            EndFileBSL = FileName.EndsWith(".bsl");
+            EndFileXML = FileName.EndsWith(".xml");
         }
     }
 }
