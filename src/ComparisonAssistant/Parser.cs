@@ -120,7 +120,7 @@ namespace ComparisonAssistant
                         {
                             file = rowFile.Split(new string[] { "\t" }, StringSplitOptions.None);
 
-                            if (file.Count() == 2)
+                            if (file.Count() == 2 || file.Count() == 3)
                             {
                                 fileName = GetNameObject(file[1]);
 
