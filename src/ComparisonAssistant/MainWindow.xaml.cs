@@ -29,7 +29,8 @@ namespace ComparisonAssistant
         private bool _availableNewFileLog = false;
         private Watcher _watcher;
 
-        private bool _visibleStackPanelStorage = true;
+        private bool _visibleStackPanelFilter = true;
+        private bool _visibleStackPanelStorage = false;
         private bool _visibleTypeConnection = false;
 
         public List<Model.User> Users { get; set; }
@@ -224,25 +225,42 @@ namespace ComparisonAssistant
             //SetVisibleStackPanelStorage();
         }
 
+        private void ChangeVisibleStackPanel()
+        {
+            SetVisibleStackPanelFilter();
+            SetVisibleStackPanelStorage();
+        }
+
         private void SetVisibleStackPanelStorage()
         {
-            if (_visibleStackPanelStorage)
+            SetVisibleStackPanel(_visibleStackPanelStorage, StackPanelStorage);
+        }
+
+        private void SetVisibleStackPanelFilter()
+        {
+            SetVisibleStackPanel(_visibleStackPanelFilter, StackPanelFilter);
+        }
+
+        private void SetVisibleStackPanel(bool visible, StackPanel stackPanel)
+        {
+            if (visible)
             {
-                StackPanelStorage.Visibility = Visibility.Visible;
-                GridParameters.Background = new SolidColorBrush(Colors.LightSteelBlue)
+                stackPanel.Visibility = Visibility.Visible;
+                stackPanel.Background = new SolidColorBrush(Colors.LightSteelBlue)
                 {
                     Opacity = 0.5
                 };
             }
             else
             {
-                StackPanelStorage.Visibility = Visibility.Collapsed;
-                GridParameters.Background = new SolidColorBrush(Colors.LightSteelBlue)
+                stackPanel.Visibility = Visibility.Collapsed;
+                stackPanel.Background = new SolidColorBrush(Colors.LightSteelBlue)
                 {
                     Opacity = 0
                 };
             }
         }
+
 
         private void LoadUserSettings()
         {
@@ -279,14 +297,18 @@ namespace ComparisonAssistant
             StackPanelTypeFile.Visibility = _visibleTypeConnection ? Visibility.Collapsed: Visibility.Visible;
         }
 
-        private void TextBlockPanelFilter_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void ButtonParameters_Click(object sender, RoutedEventArgs e)
         {
-
+            _visibleStackPanelFilter = false;
+            _visibleStackPanelStorage = true;
+            ChangeVisibleStackPanel();
         }
 
-        private void TextBlockParameters_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void ButtonFilter_Click(object sender, RoutedEventArgs e)
         {
-
+            _visibleStackPanelFilter = true;
+            _visibleStackPanelStorage = false;
+            ChangeVisibleStackPanel();
         }
     }
 }

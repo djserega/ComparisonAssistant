@@ -105,111 +105,140 @@
 
             <Separator Height="1" Background="{x:Null}"/>
 
-            <Grid x:Name="GridParameters">
+            <StackPanel Orientation="Vertical">
 
-                <StackPanel Orientation="Vertical">
-
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock x:Name="TextBlockPanelFilter" Width="55" Text="Фильтры" 
-                                   MouseLeftButtonDown="TextBlockPanelFilter_MouseLeftButtonDown">
-                            <TextBlock.Background>
-                                <SolidColorBrush Color="LightSteelBlue" Opacity="0.5"/>
-                            </TextBlock.Background>
-                        </TextBlock>
-                        <TextBlock x:Name="TextBlockParameters" Width="310" Text="Параметры подключения к хранилищу конфигурации"
-                                   MouseLeftButtonDown="TextBlockParameters_MouseLeftButtonDown">
-                            <TextBlock.Background>
-                                <SolidColorBrush Color="LightSteelBlue" Opacity="0.5"/>
-                            </TextBlock.Background>
-                        </TextBlock>
-                    </StackPanel>
-
-                    <StackPanel x:Name="StackPanelFilter" Orientation="Vertical">
-
-                        <StackPanel Orientation="Horizontal">
-
-                            <Label Content="Дата начала"/>
-                            <DatePicker x:Name="DatePickerFilterStart" Width="140" Background="LightSteelBlue" SelectedDate="{Binding FilterDateStart}">
-                                <DatePicker.Resources>
-                                    <Style TargetType="DatePickerTextBox">
-                                        <Setter Property="Control.Template">
-                                            <Setter.Value>
-                                                <ControlTemplate>
-                                                    <TextBox Text="{Binding Path=SelectedDate, StringFormat={}{0:dd-MM-yyyy HH:mm:ss}, RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}"/>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource MetroButton}">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </Style>
-                                    <Style TargetType="TextBox">
-                                        <Setter Property="Background" Value="LightSteelBlue"/>
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
-                                        <Setter Property="BorderThickness" Value="0"/>
-                                    </Style>
-                                </DatePicker.Resources>
-                            </DatePicker>
-                            <Label Content="Дата окончания"/>
-                            <DatePicker x:Name="DatePickerFilterEnd" Width="140" Background="LightSteelBlue" SelectedDate="{Binding FilterDateEnd}">
-                                <DatePicker.Resources>
-                                    <Style TargetType="DatePickerTextBox">
-                                        <Setter Property="Control.Template">
-                                            <Setter.Value>
-                                                <ControlTemplate>
-                                                    <TextBox Text="{Binding Path=SelectedDate, StringFormat={}{0:dd-MM-yyyy HH:mm:ss}, RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}"/>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource MetroButton}">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </Style>
-                                    <Style TargetType="TextBox">
-                                        <Setter Property="Background" Value="LightSteelBlue"/>
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
-                                        <Setter Property="BorderThickness" Value="0"/>
-                                    </Style>
-                                </DatePicker.Resources>
-                            </DatePicker>
-                        </StackPanel>
-                        
-                    </StackPanel>
-                    
-                    <StackPanel x:Name="StackPanelStorage" Orientation="Vertical">
-                        <StackPanel.Background>
-                            <SolidColorBrush Color="LightSteelBlue" Opacity="0.5"/>
-                        </StackPanel.Background>
-
-                        <StackPanel Orientation="Horizontal">
-                            <Label Content="Тип подключения (сервер)" MinWidth="160"/>
-                            <CheckBox x:Name="CheckBoxTypeConnection" Background="{x:Null}" Click="CheckBoxTypeConnection_Click" />
-                            <StackPanel x:Name="StackPanelTypeServer" Orientation="Horizontal" Visibility="Collapsed">
-                                <Label Content="Сервер"/>
-                                <TextBox x:Name="TextBoxServer" MinWidth="220" Background="{x:Null}"/>
-                                <Label Content="База"/>
-                                <TextBox x:Name="TextBoxBase" MinWidth="150" Background="{x:Null}"/>
-                            </StackPanel>
-                            <StackPanel x:Name="StackPanelTypeFile" Orientation="Horizontal">
-                                <Label Content="Путь к каталогу" MinWidth="110"/>
-                                <TextBox x:Name="TextBoxPathBase" MinWidth="405" Background="{x:Null}"/>
-                            </StackPanel>
-                        </StackPanel>
-                        <Separator Width="1" Background="{x:Null}"/>
-                        <StackPanel Orientation="Horizontal">
-                            <Label Content="Путь к хранилищу" MinWidth="160"/>
-                            <TextBox x:Name="TextBoxStoragePath" MinWidth="405" Background="{x:Null}"/>
-                            <Label Content="Пользователь"/>
-                            <TextBox x:Name="TextBoxStorageUser" MinWidth="150" Background="{x:Null}"/>
-                            <Label Content="Пароль"/>
-                            <PasswordBox x:Name="TextBoxStoragePass" MinWidth="150" Background="{x:Null}"/>
-                        </StackPanel>
-                    </StackPanel>
-
-                    <Separator Height="1" Background="{x:Null}"/>
-
+                <StackPanel Orientation="Horizontal">
+                    <Button>
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource MetroButton}" TargetType="{x:Type Button}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border x:Name="BorderFilter" CornerRadius="10,10,0,0" BorderThickness="0.3">
+                                                <Border.Background>
+                                                    <SolidColorBrush Color="LightSteelBlue" Opacity="0.5"/>
+                                                </Border.Background>
+                                                <Button x:Name="ButtonFilter" Content="Фильтр" Background="{x:Null}" BorderBrush="{x:Null}" FontWeight="Normal"
+                                                        Click="ButtonFilter_Click"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button>
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource MetroButton}" TargetType="{x:Type Button}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border x:Name="BorderParameters" CornerRadius="10,10,0,0" BorderThickness="0.3">
+                                                <Border.Background>
+                                                    <SolidColorBrush Color="LightSteelBlue" Opacity="0.5"/>
+                                                </Border.Background>
+                                                <Button x:Name="ButtonParameters" Content="Параметры подключения к хранилищу конфигурации" Background="{x:Null}" BorderBrush="{x:Null}" FontWeight="Normal"
+                                                        Click="ButtonParameters_Click"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                 </StackPanel>
-            </Grid>
+
+                <StackPanel x:Name="StackPanelFilter" Orientation="Vertical">
+                    <StackPanel.Background>
+                        <SolidColorBrush Color="LightSteelBlue" Opacity="0.5"/>
+                    </StackPanel.Background>
+                    <Separator Width="1" Background="{x:Null}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Дата начала"/>
+                        <DatePicker x:Name="DatePickerFilterStart" Width="140" Background="LightSteelBlue" SelectedDate="{Binding FilterDateStart}">
+                            <DatePicker.Resources>
+                                <Style TargetType="DatePickerTextBox">
+                                    <Setter Property="Control.Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <TextBox Text="{Binding Path=SelectedDate, StringFormat={}{0:dd-MM-yyyy HH:mm:ss}, RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource MetroButton}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="Background" Value="LightSteelBlue"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                </Style>
+                            </DatePicker.Resources>
+                        </DatePicker>
+                        <Label Content="Дата окончания"/>
+                        <DatePicker x:Name="DatePickerFilterEnd" Width="140" Background="LightSteelBlue" SelectedDate="{Binding FilterDateEnd}">
+                            <DatePicker.Resources>
+                                <Style TargetType="DatePickerTextBox">
+                                    <Setter Property="Control.Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <TextBox Text="{Binding Path=SelectedDate, StringFormat={}{0:dd-MM-yyyy HH:mm:ss}, RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource MetroButton}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="Background" Value="LightSteelBlue"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                </Style>
+                            </DatePicker.Resources>
+                        </DatePicker>
+                    </StackPanel>
+                    <Separator Width="1" Background="{x:Null}"/>
+                    <TextBox Background="{x:Null}" IsReadOnly="True" BorderBrush="{x:Null}"/>
+                    <Separator Width="1" Background="{x:Null}"/>
+                </StackPanel>
+
+                <StackPanel x:Name="StackPanelStorage" Orientation="Vertical">
+                    <StackPanel.Background>
+                        <SolidColorBrush Color="LightSteelBlue" Opacity="0.5"/>
+                    </StackPanel.Background>
+
+                    <Separator Width="1" Background="{x:Null}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Тип подключения (сервер)" MinWidth="160"/>
+                        <CheckBox x:Name="CheckBoxTypeConnection" Background="{x:Null}" Click="CheckBoxTypeConnection_Click" />
+                        <StackPanel x:Name="StackPanelTypeServer" Orientation="Horizontal" Visibility="Collapsed">
+                            <Label Content="Сервер"/>
+                            <TextBox x:Name="TextBoxServer" MinWidth="220" Background="{x:Null}"/>
+                            <Label Content="База"/>
+                            <TextBox x:Name="TextBoxBase" MinWidth="150" Background="{x:Null}"/>
+                        </StackPanel>
+                        <StackPanel x:Name="StackPanelTypeFile" Orientation="Horizontal">
+                            <Label Content="Путь к каталогу" MinWidth="110"/>
+                            <TextBox x:Name="TextBoxPathBase" MinWidth="405" Background="{x:Null}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Separator Width="1" Background="{x:Null}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Путь к хранилищу" MinWidth="160"/>
+                        <TextBox x:Name="TextBoxStoragePath" MinWidth="405" Background="{x:Null}"/>
+                        <Label Content="Пользователь"/>
+                        <TextBox x:Name="TextBoxStorageUser" MinWidth="150" Background="{x:Null}"/>
+                        <Label Content="Пароль"/>
+                        <PasswordBox x:Name="TextBoxStoragePass" MinWidth="150" Background="{x:Null}"/>
+                    </StackPanel>
+                    <Separator Width="1" Background="{x:Null}"/>
+                </StackPanel>
+
+                <Separator Height="1" Background="{x:Null}"/>
+
+            </StackPanel>
 
             <Separator Height="1" Background="{x:Null}"/>
 
