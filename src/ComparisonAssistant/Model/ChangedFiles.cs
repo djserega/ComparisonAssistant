@@ -43,6 +43,9 @@ namespace ComparisonAssistant.Model
 
         internal int LastFilledPart { get; private set; }
 
+        internal string FileNameWithoutLastPart { get; private set; }
+        internal string FileNameWithoutExtension { get; private set; }
+
         public ChangedFiles(string status, string fileName)
         {
             Status = status;
@@ -60,56 +63,72 @@ namespace ComparisonAssistant.Model
         {
             EndFileBSL = FileName.EndsWith(".bsl");
             EndFileXML = FileName.EndsWith(".xml");
+
+            if (EndFileBSL)
+                FileNameWithoutExtension = FileName.RemoveEndText(".bsl");
+            else if (EndFileXML)
+                FileNameWithoutExtension = FileName.RemoveEndText(".xml");
         }
 
         private void SplitIntoParts()
         {
+            StringBuilder stringBuilder = new StringBuilder();
+
             string[] fileNameParts = _fileName.Split('/');
+            int countParts = fileNameParts.Count();
             for (int i = 0; i < 10; i++)
             {
-                string parts;
-                if (fileNameParts.Count() > i)
+                string part;
+                if (countParts > i)
                 {
-                    parts = fileNameParts[i];
+                    part = fileNameParts[i];
+                    if (countParts - 1 > i)
+                    {
+                        stringBuilder.Append(part);
+                        if (countParts - 1 > i + 1)
+                            stringBuilder.Append("/");
+                    }
                     LastFilledPart = i;
                 }
                 else
-                    parts = string.Empty;
+                    part = string.Empty;
 
                 switch (i)
                 {
                     case 0:
-                        FilePart0 = parts;
+                        FilePart0 = part;
                         break;
                     case 1:
-                        FilePart1 = parts;
+                        FilePart1 = part;
                         break;
                     case 2:
-                        FilePart2 = parts;
+                        FilePart2 = part;
                         break;
                     case 3:
-                        FilePart3 = parts;
+                        FilePart3 = part;
                         break;
                     case 4:
-                        FilePart4 = parts;
+                        FilePart4 = part;
                         break;
                     case 5:
-                        FilePart5 = parts;
+                        FilePart5 = part;
                         break;
                     case 6:
-                        FilePart6 = parts;
+                        FilePart6 = part;
                         break;
                     case 7:
-                        FilePart7 = parts;
+                        FilePart7 = part;
                         break;
                     case 8:
-                        FilePart8 = parts;
+                        FilePart8 = part;
                         break;
                     case 9:
-                        FilePart9 = parts;
+                        FilePart9 = part;
                         break;
                 }
             }
+
+            FileNameWithoutLastPart = stringBuilder.ToString();
         }
 
         private void CheckChangedType()
@@ -165,5 +184,19 @@ namespace ComparisonAssistant.Model
                 ChangeObject = true;
         }
 
+        internal void CompareObject(ChangedFiles changed)
+        {
+            if (changed.ChangeModuleManaged)
+                ChangeModuleManaged = true;
+
+            if (changed.ChangeModuleObject)
+                ChangeModuleObject = true;
+
+            if (changed.ChangeObject)
+                ChangeObject = true;
+
+            if (changed.ChangeTemplate)
+                ChangeTemplate = true;
+        }
     }
 }
