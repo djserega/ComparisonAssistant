@@ -151,15 +151,29 @@ namespace ComparisonAssistant
                     }
                 }
 
+                ChangedFiles elementObject;
                 foreach (User item in Users)
                 {
                     for (int i = 0; i < UserTasks[item].Count; i++)
                     {
-                        List<ChangedFiles> changedFiles = new List<ChangedFiles>();
+                        List<ChangedFiles> updateChangedFiles = new List<ChangedFiles>();
                         foreach (ChangedFiles elementFile in UserTasks[item][i].Files)
                         {
-                            changedFiles.Add(elementFile);
+                            if (elementFile.EndFileBSL || elementFile.EndFileXML)
+                            {
+                                elementObject = updateChangedFiles.FirstOrDefault(f => f.FileNameWithoutExtension == elementFile.FileNameWithoutLastPart);
+                                if (elementObject == null)
+                                    updateChangedFiles.Add(elementFile);
+                                else
+                                {
+                                    elementObject.CompareObject(elementFile);
+                                }
+                            }
+                            else
+                                updateChangedFiles.Add(elementFile);
                         }
+
+                        UserTasks[item][i].Files = updateChangedFiles;
                     }
                 }
             }

@@ -56,6 +56,14 @@ namespace ComparisonAssistant.Model
         {
             CheckEndingFileName();
             SplitIntoParts();
+
+            if (EndFileBSL || EndFileXML)
+            {
+                FileNameWithoutLastPart = FileNameWithoutLastPart.RemoveEndText("/");
+                if (FilePart2 == "Ext")
+                    FileNameWithoutLastPart = FileNameWithoutLastPart.RemoveEndText("/Ext");
+            }
+
             CheckChangedType();
         }
 
@@ -72,7 +80,7 @@ namespace ComparisonAssistant.Model
 
         private void SplitIntoParts()
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilderLastPart = new StringBuilder();
 
             string[] fileNameParts = _fileName.Split('/');
             int countParts = fileNameParts.Count();
@@ -84,9 +92,8 @@ namespace ComparisonAssistant.Model
                     part = fileNameParts[i];
                     if (countParts - 1 > i)
                     {
-                        stringBuilder.Append(part);
-                        if (countParts - 1 > i + 1)
-                            stringBuilder.Append("/");
+                        stringBuilderLastPart.Append(part);
+                        stringBuilderLastPart.Append("/");
                     }
                     LastFilledPart = i;
                 }
@@ -128,7 +135,7 @@ namespace ComparisonAssistant.Model
                 }
             }
 
-            FileNameWithoutLastPart = stringBuilder.ToString();
+            FileNameWithoutLastPart = stringBuilderLastPart.ToString();
         }
 
         private void CheckChangedType()
