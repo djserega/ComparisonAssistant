@@ -233,11 +233,15 @@ namespace ComparisonAssistant
 
         private void SetVisibleStackPanelStorage()
         {
+            if (_visibleStackPanelStorage)
+                SetPositionSeparatorPanel(51, 308);
             SetVisibleStackPanel(_visibleStackPanelStorage, StackPanelStorage);
         }
 
         private void SetVisibleStackPanelFilter()
         {
+            if (_visibleStackPanelFilter)
+                SetPositionSeparatorPanel(1, 48);
             SetVisibleStackPanel(_visibleStackPanelFilter, StackPanelFilter);
         }
 
@@ -261,6 +265,11 @@ namespace ComparisonAssistant
             }
         }
 
+        private void SetPositionSeparatorPanel(double left, double width)
+        {
+            TextBlockSeparator.Margin = new Thickness(left, 0, 0, 0);
+            TextBlockSeparator.Width = width;
+        }
 
         private void LoadUserSettings()
         {

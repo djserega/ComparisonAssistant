@@ -115,7 +115,7 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type Button}">
-                                            <Border x:Name="BorderFilter" CornerRadius="10,10,0,0" BorderThickness="0.3">
+                                            <Border x:Name="BorderFilter" CornerRadius="5,5,0,0" BorderThickness="0.3">
                                                 <Border.Background>
                                                     <SolidColorBrush Color="LightSteelBlue" Opacity="0.5"/>
                                                 </Border.Background>
@@ -148,6 +148,8 @@
                         </Button.Style>
                     </Button>
                 </StackPanel>
+
+                <TextBlock x:Name="TextBlockSeparator" Height="2" Width="50" Background="Red" Margin="0,0,0,0" HorizontalAlignment="Left"/>
 
                 <StackPanel x:Name="StackPanelFilter" Orientation="Vertical">
                     <StackPanel.Background>
@@ -237,6 +239,8 @@
                     <Separator Width="1" Background="{x:Null}"/>
                 </StackPanel>
 
+                <!--<TextBlock Height="2" Background="Red"/>-->
+                
                 <Separator Height="1" Background="{x:Null}"/>
 
             </StackPanel>
