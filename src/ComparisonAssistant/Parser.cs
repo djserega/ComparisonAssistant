@@ -66,7 +66,7 @@ namespace ComparisonAssistant
         internal void ReadFileLog()
         {
             DateTime filterDateMin = DateMin == null ? DateTime.MinValue : (DateTime)DateMin;
-            DateTime filterDateMax = DateMax == null ? DateTime.MaxValue : (DateTime)DateMax;
+            DateTime filterDateMax = DateMax == null || DateMax == DateTime.MinValue ? DateTime.MaxValue : (DateTime)DateMax;
 
 
             using (StreamReader reader = new StreamReader(LogFileName))
