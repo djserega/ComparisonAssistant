@@ -26,6 +26,9 @@ namespace ComparisonAssistant
         private Dictionary<string, string> _translateObject;
         private List<string> _listSkipFiles;
 
+        internal DateTime? DateMin { get; set; }
+        internal DateTime? DateMax { get; set; }
+
         internal Parser()
         {
             FileInfo fileInfo = new FileInfo(LogFileName);
@@ -62,6 +65,10 @@ namespace ComparisonAssistant
 
         internal void ReadFileLog()
         {
+            DateTime filterDateMin = DateMin == null ? DateTime.MinValue : (DateTime)DateMin;
+            DateTime filterDateMax = DateMax == null ? DateTime.MaxValue : (DateTime)DateMax;
+
+
             using (StreamReader reader = new StreamReader(LogFileName))
             {
                 string rowFile;
@@ -85,33 +92,55 @@ namespace ComparisonAssistant
                     if (thisCommit)
                     {
                         #region Read commit
-                        string[] commits = rowFile.Split(new string[] { _separatorCommit }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] commitParts = rowFile.Split(new string[] { _separatorCommit }, StringSplitOptions.RemoveEmptyEntries);
 
-                        if (commits.Count() == 3)
+                        if (commitParts.Count() == 3)
                         {
-                            userName = commits[0];
-
-                            foreach (Match item in new Regex("DEV-[0-9]*").Matches(commits[1]))
+                            DateTime dateCommit;
+                            try
                             {
-                                taskName = item.Value;
+                                dateCommit = DateTime.Parse(commitParts[2]);
+                            }
+                            catch (FormatException)
+                            {
+                                dateCommit = DateTime.MinValue;
+                            }
 
-                                findedUser = Users.FirstOrDefault(f => f.Name == userName);
-                                if (findedUser == null)
+                            if (!(filterDateMin <= dateCommit && dateCommit <= filterDateMax))
+                                continue;
+
+                            userName = commitParts[0];
+
+                            findedUser = Users.FirstOrDefault(f => f.Name == userName);
+                            if (findedUser == null)
+                            {
+                                findedUser = new User(userName);
+                                Users.Add(findedUser);
+                            }
+
+                            MatchCollection matches = new Regex("DEV-[0-9]*").Matches(commitParts[1]);
+                            if (matches.Count > 0)
+                            {
+                                foreach (Match item in matches)
                                 {
-                                    findedUser = new User(userName);
-                                    Users.Add(findedUser);
-                                }
+                                    taskName = item.Value;
 
-                                userTask = new Task(taskName);
-                                if (UserTasks.ContainsKey(findedUser))
-                                {
-                                    if (UserTasks[findedUser].FirstOrDefault(f => f.Name == taskName) == null)
-                                        UserTasks[findedUser].Add(userTask);
-                                }
-                                else
-                                    UserTasks.Add(findedUser, new List<Task>() { userTask });
+                                    userTask = new Task(taskName);
+                                    if (UserTasks.ContainsKey(findedUser))
+                                    {
+                                        if (UserTasks[findedUser].FirstOrDefault(f => f.Name == taskName) == null)
+                                            UserTasks[findedUser].Add(userTask);
+                                    }
+                                    else
+                                        UserTasks.Add(findedUser, new List<Task>() { userTask });
 
-                                addedTasks.Add(userTask);
+                                    addedTasks.Add(userTask);
+                                }
+                            }
+                            else
+                            {
+                                if (!UserTasks.ContainsKey(findedUser))
+                                    UserTasks.Add(findedUser, new List<Task>());
                             }
                         }
                         #endregion
@@ -138,11 +167,14 @@ namespace ComparisonAssistant
                                     }
                                 }
                             }
-                        } 
+                        }
                         #endregion
                     }
                     else
+                    {
+                        findedUser = null;
                         addedTasks.Clear();
+                    }
                 }
                 #endregion
 
