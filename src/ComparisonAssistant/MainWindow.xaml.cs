@@ -57,9 +57,6 @@ namespace ComparisonAssistant
 
             DataGridChanges.Items.Clear();
 
-            SetVisibleAvailableNewFileLog();
-            SetVisibleTypeConnection();
-
             ComboBoxStandartFilterPeriod.SelectedItem = StandardFilterPeriods.Find(f => f.Name == "Сегодня");
 
             XmlLanguage currentDateLanguage = XmlLanguage.GetLanguage(Thread.CurrentThread.CurrentCulture.Name);
@@ -81,7 +78,11 @@ namespace ComparisonAssistant
         private void FormMainMenu_Loaded(object sender, RoutedEventArgs e)
         {
             LoadUserSettings();
+
             SetVisibleStackPanelStorage();
+            SetVisibleAvailableNewFileLog();
+            SetVisibleTypeConnection();
+
             LoadFileLogsAsync();
         }
 
@@ -290,12 +291,12 @@ namespace ComparisonAssistant
 
         private void CheckBoxTypeConnection_Click(object sender, RoutedEventArgs e)
         {
-            _visibleTypeConnection = CheckBoxTypeConnection.IsChecked.HasValue && CheckBoxTypeConnection.IsChecked.Value;
             SetVisibleTypeConnection();
         }
 
         private void SetVisibleTypeConnection()
         {
+            _visibleTypeConnection = CheckBoxTypeConnection.IsChecked.HasValue && CheckBoxTypeConnection.IsChecked.Value;
             StackPanelTypeServer.Visibility = _visibleTypeConnection ? Visibility.Visible : Visibility.Collapsed;
             StackPanelTypeFile.Visibility = _visibleTypeConnection ? Visibility.Collapsed : Visibility.Visible;
         }
