@@ -201,6 +201,9 @@
                                 </Style>
                             </DatePicker.Resources>
                         </DatePicker>
+                        <Label Content="Стандартные периоды"/>
+                        <ComboBox x:Name="ComboBoxStandartFilterPeriod" ItemsSource="{Binding StandardFilterPeriods}" Background="LightSteelBlue" MinWidth="150"
+                                  SelectionChanged="ComboBoxStandartFilterPeriod_SelectionChanged"/>
                     </StackPanel>
                     <Separator Width="1" Background="{x:Null}"/>
                     <TextBox Background="{x:Null}" IsReadOnly="True" BorderBrush="{x:Null}"/>

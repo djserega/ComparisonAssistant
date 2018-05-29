@@ -41,11 +41,13 @@ namespace ComparisonAssistant
 
         public DateTime FilterDateStart { get; set; }
         public DateTime FilterDateEnd { get; set; }
+        public List<Model.StandardFilterPeriods> StandardFilterPeriods { get; }
 
         public MainWindow()
         {
             InitializeComponent();
 
+            StandardFilterPeriods = new Model.StandardFilterPeriods().GetListPeriodsByDefault();
             Users = new List<Model.User>();
             UserTasks = new Dictionary<Model.User, List<Model.Task>>();
 
@@ -58,9 +60,7 @@ namespace ComparisonAssistant
             SetVisibleAvailableNewFileLog();
             SetVisibleTypeConnection();
 
-
-            FilterDateStart = DateTime.Now.StartDay();
-            FilterDateEnd = DateTime.Now.EndDay();
+            ComboBoxStandartFilterPeriod.SelectedItem = StandardFilterPeriods.Find(f => f.Name == "Сегодня");
 
             XmlLanguage currentDateLanguage = XmlLanguage.GetLanguage(Thread.CurrentThread.CurrentCulture.Name);
 
@@ -143,7 +143,8 @@ namespace ComparisonAssistant
 
         private async Task<Parser> LoadFileLogs()
         {
-            return await Task.Run(() => {
+            return await Task.Run(() =>
+            {
                 Parser parser = null;
                 try
                 {
@@ -176,7 +177,7 @@ namespace ComparisonAssistant
             {
                 listItem.Add(item);
             }
-            
+
             if (listItem.Count > 0)
                 new OneScript().LockObject(connector, listItem.ToList());
         }
@@ -216,13 +217,6 @@ namespace ComparisonAssistant
             {
                 LabelAvailableNewFileLog.Visibility = _availableNewFileLog ? Visibility.Visible : Visibility.Collapsed;
             }));
-        }
-
-        private void HyperLinkParameters_Click(object sender, RoutedEventArgs e)
-        {
-            //_visibleStackPanelStorage = !_visibleStackPanelStorage;
-            //
-            //SetVisibleStackPanelStorage();
         }
 
         private void ChangeVisibleStackPanel()
@@ -281,7 +275,7 @@ namespace ComparisonAssistant
             SetTextControl(TextBoxStoragePath, properties.StoragePath);
             SetTextControl(TextBoxStorageUser, properties.StorageUser);
         }
-        
+
         private void SaveUserSettings()
         {
             var properties = Properties.Settings.Default;
@@ -303,7 +297,7 @@ namespace ComparisonAssistant
         private void SetVisibleTypeConnection()
         {
             StackPanelTypeServer.Visibility = _visibleTypeConnection ? Visibility.Visible : Visibility.Collapsed;
-            StackPanelTypeFile.Visibility = _visibleTypeConnection ? Visibility.Collapsed: Visibility.Visible;
+            StackPanelTypeFile.Visibility = _visibleTypeConnection ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void ButtonParameters_Click(object sender, RoutedEventArgs e)
@@ -318,6 +312,18 @@ namespace ComparisonAssistant
             _visibleStackPanelFilter = true;
             _visibleStackPanelStorage = false;
             ChangeVisibleStackPanel();
+        }
+
+        private void ComboBoxStandartFilterPeriod_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComboBoxStandartFilterPeriod.SelectedItem is Model.StandardFilterPeriods periods)
+            {
+                FilterDateStart = periods.DateStart ?? DateTime.MinValue;
+                FilterDateEnd = periods.DateEnd ?? DateTime.MaxValue;
+
+                BindingOperations.GetBindingExpression(DatePickerFilterStart, DatePicker.SelectedDateProperty).UpdateTarget();
+                BindingOperations.GetBindingExpression(DatePickerFilterEnd, DatePicker.SelectedDateProperty).UpdateTarget();
+            }
         }
     }
 }
