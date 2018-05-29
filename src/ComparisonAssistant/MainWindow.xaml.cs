@@ -33,14 +33,42 @@ namespace ComparisonAssistant
         private bool _visibleStackPanelStorage = false;
         private bool _visibleTypeConnection = false;
 
+        private bool _changedFilter = false;
+        private DateTime _filterDateStart;
+        private DateTime _filterDateEnd;
+
         public List<Model.User> Users { get; set; }
         public Dictionary<Model.User, List<Model.Task>> UserTasks { get; set; }
 
         public DateTime DateEdited { get; set; }
         public DateTime DateUpdated { get; set; }
 
-        public DateTime FilterDateStart { get; set; }
-        public DateTime FilterDateEnd { get; set; }
+        public DateTime FilterDateStart
+        {
+            get => _filterDateStart;
+            set
+            {
+                if (_filterDateStart != value)
+                {
+                    _filterDateStart = value;
+                    _changedFilter = true;
+                    SetContentButtonUpdate();
+                }
+            }
+        }
+        public DateTime FilterDateEnd
+        {
+            get => _filterDateEnd;
+            set
+            {
+                if (_filterDateEnd != value)
+                {
+                    _filterDateEnd = value;
+                    _changedFilter = true;
+                    SetContentButtonUpdate();
+                }
+            }
+        }
         public List<Model.StandardFilterPeriods> StandardFilterPeriods { get; }
 
         public MainWindow()
@@ -117,6 +145,7 @@ namespace ComparisonAssistant
         {
             StackPanelDataFile.Visibility = Visibility.Collapsed;
             LabelUpdating.Visibility = Visibility.Visible;
+            _changedFilter = false;
 
             Parser parser = await LoadFileLogs();
 
@@ -140,6 +169,7 @@ namespace ComparisonAssistant
 
             _availableNewFileLog = false;
             SetVisibleAvailableNewFileLog();
+            SetContentButtonUpdate();
         }
 
         private async Task<Parser> LoadFileLogs()
@@ -324,7 +354,14 @@ namespace ComparisonAssistant
 
                 BindingOperations.GetBindingExpression(DatePickerFilterStart, DatePicker.SelectedDateProperty).UpdateTarget();
                 BindingOperations.GetBindingExpression(DatePickerFilterEnd, DatePicker.SelectedDateProperty).UpdateTarget();
+
+                SetContentButtonUpdate();
             }
+        }
+
+        private void SetContentButtonUpdate()
+        {
+            ButtonUpdateInfo.Content = _changedFilter ? "Обновить данные *" : "Обновить данные";
         }
     }
 }
