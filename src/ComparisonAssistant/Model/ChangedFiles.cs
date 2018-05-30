@@ -25,6 +25,7 @@ namespace ComparisonAssistant.Model
         public bool ChangeObject { get; private set; }
         public bool ChangeModuleObject { get; private set; }
         public bool ChangeModuleManaged { get; private set; }
+        public bool ChangeModuleForm { get; private set; }
         public bool ChangeTemplate { get; private set; }
 
         internal string FilePart0 { get; private set; }
@@ -145,7 +146,7 @@ namespace ComparisonAssistant.Model
                 if (FilePart4 == "Ext")
                 {
                     if (FilePart6 == "Module.bsl")
-                        ChangeModuleObject = true;
+                        ChangeModuleForm = true;
                     else if (FilePart5.EndsWith(".xml"))
                         ChangeObject = true;
                 }

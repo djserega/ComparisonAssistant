@@ -285,6 +285,7 @@
                         <DataGridCheckBoxColumn Binding="{Binding ChangeObject, Mode=OneWay}" Header="Объект"/>
                         <DataGridCheckBoxColumn Binding="{Binding ChangeModuleObject, Mode=OneWay}" Header="Модуль объекта"/>
                         <DataGridCheckBoxColumn Binding="{Binding ChangeModuleManaged, Mode=OneWay}" Header="Модуль менеджера"/>
+                        <DataGridCheckBoxColumn Binding="{Binding ChangeModuleForm, Mode=OneWay}" Header="Модуль формы"/>
                         <DataGridCheckBoxColumn Binding="{Binding ChangeTemplate, Mode=OneWay}" Header="Шаблоны"/>
                     </DataGrid.Columns>
                 </DataGrid>
