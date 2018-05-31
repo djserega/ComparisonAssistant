@@ -36,6 +36,7 @@ namespace ComparisonAssistant
         private bool _changedFilter = false;
         private DateTime _filterDateStart;
         private DateTime _filterDateEnd;
+        private string _prefixTaskName;
 
         public List<Model.User> Users { get; set; }
         public Dictionary<Model.User, List<Model.Task>> UserTasks { get; set; }
@@ -70,6 +71,19 @@ namespace ComparisonAssistant
             }
         }
         public List<Model.StandardFilterPeriods> StandardFilterPeriods { get; }
+        public string PrefixTaskName
+        {
+            get => _prefixTaskName;
+            set
+            {
+                if (_prefixTaskName != value)
+                {
+                    _prefixTaskName = value;
+                    _changedFilter = true;
+                    SetContentButtonUpdate();
+                }
+            }
+        }
 
         public MainWindow()
         {
@@ -143,6 +157,8 @@ namespace ComparisonAssistant
 
         private async void LoadFileLogsAsync()
         {
+            CheckFilledPrefixTaskName();
+
             StackPanelDataFile.Visibility = Visibility.Collapsed;
             LabelUpdating.Visibility = Visibility.Visible;
             _changedFilter = false;
@@ -259,14 +275,14 @@ namespace ComparisonAssistant
         private void SetVisibleStackPanelStorage()
         {
             if (_visibleStackPanelStorage)
-                SetPositionSeparatorPanel(51, 308);
+                SetPositionSeparatorPanel(141, 309);
             SetVisibleStackPanel(_visibleStackPanelStorage, StackPanelStorage);
         }
 
         private void SetVisibleStackPanelFilter()
         {
             if (_visibleStackPanelFilter)
-                SetPositionSeparatorPanel(1, 48);
+                SetPositionSeparatorPanel(1, 139);
             SetVisibleStackPanel(_visibleStackPanelFilter, StackPanelFilter);
         }
 
@@ -305,6 +321,11 @@ namespace ComparisonAssistant
             SetTextControl(TextBoxPathBase, properties.PathBase);
             SetTextControl(TextBoxStoragePath, properties.StoragePath);
             SetTextControl(TextBoxStorageUser, properties.StorageUser);
+
+            PrefixTaskName = properties.PrefixTaskName;
+            CheckFilledPrefixTaskName();
+
+            BindingOperations.GetBindingExpression(TextBoxPrefixTaskName, TextBox.TextProperty).UpdateTarget();
         }
 
         private void SaveUserSettings()
@@ -316,6 +337,9 @@ namespace ComparisonAssistant
             properties.PathBase = GetTextControl(TextBoxPathBase);
             properties.StoragePath = GetTextControl(TextBoxStoragePath);
             properties.StorageUser = GetTextControl(TextBoxStorageUser);
+
+            properties.PrefixTaskName = _prefixTaskName;
+
             properties.Save();
         }
 
@@ -362,6 +386,16 @@ namespace ComparisonAssistant
         private void SetContentButtonUpdate()
         {
             ButtonUpdateInfo.Content = _changedFilter ? "Обновить данные *" : "Обновить данные";
+        }
+
+        private void CheckFilledPrefixTaskName()
+        {
+            if (string.IsNullOrWhiteSpace(PrefixTaskName))
+            {
+                PrefixTaskName = "DEV-";
+                SaveUserSettings();
+                Messages.Show("Префикс имени задач установлен значением по умолчанию.");
+            }
         }
     }
 }

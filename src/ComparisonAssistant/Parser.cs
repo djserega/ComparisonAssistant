@@ -12,6 +12,7 @@ namespace ComparisonAssistant
     internal class Parser
     {
         private readonly string _separatorCommit = " --- ";
+        private string _patternFindTaskName;
 
         internal string LogFileName { get; } = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory,
@@ -35,6 +36,9 @@ namespace ComparisonAssistant
 
             if (!fileInfo.Exists)
                 throw new FileNotFoundException("Файл логов не найден.");
+
+            string prefixTaskName = Properties.Settings.Default.PrefixTaskName;
+            _patternFindTaskName = prefixTaskName + "[0-9]*";
 
             DateCreationFile = fileInfo.CreationTime;
             DateEditedFile = fileInfo.LastWriteTime;
@@ -75,9 +79,7 @@ namespace ComparisonAssistant
                 bool thisCommit;
 
                 User findedUser = null;
-                Task userTask = null;
                 string userName;
-                string taskName;
                 string[] file;
                 string fileName;
 
@@ -120,7 +122,7 @@ namespace ComparisonAssistant
                                 Users.Add(findedUser);
                             }
 
-                            MatchCollection matches = new Regex("DEV-[0-9]*").Matches(commitParts[1]);
+                            MatchCollection matches = new Regex(_patternFindTaskName).Matches(commitParts[1]);
                             if (matches.Count > 0)
                             {
                                 foreach (Match item in matches)
