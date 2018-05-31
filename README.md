@@ -40,6 +40,6 @@ git log --branches=*[master] --pretty=format:"%an --- %s --- %cI " --name-status
 
 Требуется .NET Framework: v 4.5.
 
-В планах закончить разработку захвата объектов в хранилище приемнике сравнения.
+В планах закончить разработку захвата объектов в хранилище приемнике сравнения (будет использована библиотека onescript "v8storage").
 
 Use icon from https://www.flaticon.com/ is licensed by http://creativecommons.org/licenses/by/3.0/
