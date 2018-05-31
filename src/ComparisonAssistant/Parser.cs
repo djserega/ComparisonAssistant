@@ -81,6 +81,8 @@ namespace ComparisonAssistant
                 string[] file;
                 string fileName;
 
+                string emptyTask = "<без задачи>";
+
                 List<Task> addedTasks = new List<Task>();
 
                 #region Read file log
@@ -123,24 +125,12 @@ namespace ComparisonAssistant
                             {
                                 foreach (Match item in matches)
                                 {
-                                    taskName = item.Value;
-
-                                    userTask = new Task(taskName);
-                                    if (UserTasks.ContainsKey(findedUser))
-                                    {
-                                        if (UserTasks[findedUser].FirstOrDefault(f => f.Name == taskName) == null)
-                                            UserTasks[findedUser].Add(userTask);
-                                    }
-                                    else
-                                        UserTasks.Add(findedUser, new List<Task>() { userTask });
-
-                                    addedTasks.Add(userTask);
+                                    AddUserTask(findedUser, item.Value, addedTasks);
                                 }
                             }
                             else
                             {
-                                if (!UserTasks.ContainsKey(findedUser))
-                                    UserTasks.Add(findedUser, new List<Task>());
+                                AddUserTask(findedUser, emptyTask, addedTasks);
                             }
                         }
                         #endregion
@@ -213,6 +203,21 @@ namespace ComparisonAssistant
                     }
                 }
             }
+        }
+
+        private Task AddUserTask(User findedUser, string taskName, List<Task> addedTasks)
+        {
+            Task userTask = new Task(taskName);
+            if (UserTasks.ContainsKey(findedUser))
+            {
+                if (UserTasks[findedUser].FirstOrDefault(f => f.Name == taskName) == null)
+                    UserTasks[findedUser].Add(userTask);
+            }
+            else
+                UserTasks.Add(findedUser, new List<Task>() { userTask });
+
+            addedTasks.Add(userTask);
+            return userTask;
         }
 
         private string GetNameObject(string fileName)

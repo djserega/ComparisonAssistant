@@ -23,10 +23,25 @@ namespace ComparisonAssistant.Model
 
         internal int CompareName(Task b)
         {
-            int idA = Convert.ToInt32(Name.Replace("DEV-", ""));
-            int idB = Convert.ToInt32(b.Name.Replace("DEV-", ""));
+            bool findedDevA = Name.Contains("DEV-");
+            bool findedDevB = b.Name.Contains("DEV-");
 
-            return -idA.CompareTo(idB);
+            if (findedDevA && findedDevB)
+            {
+                int idA = Convert.ToInt32(Name.Replace("DEV-", ""));
+                int idB = Convert.ToInt32(b.Name.Replace("DEV-", ""));
+
+                return -idA.CompareTo(idB);
+            }
+            else
+            {
+                if (!findedDevA)
+                    return -1;
+                else if (!findedDevB)
+                    return 1;
+                else
+                    return 0;
+            }
         }
     }
 }
