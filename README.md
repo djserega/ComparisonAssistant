@@ -36,7 +36,9 @@
 ```
 
 #### Шаблон выгрузки логов:
+```bsl
 git log --branches=*[master] --pretty=format:"%an --- %s --- %cI " --name-status > log.txt
+```
 
 Требуется .NET Framework: v 4.5.
 
