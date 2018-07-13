@@ -9,6 +9,7 @@ namespace ComparisonAssistant.Model
     {
         private string _fileName;
 
+        #region Public properties (columns)
         public string Status { get; set; }
         public string FileName
         {
@@ -27,7 +28,9 @@ namespace ComparisonAssistant.Model
         public bool ChangeModuleManaged { get; private set; }
         public bool ChangeModuleForm { get; private set; }
         public bool ChangeTemplate { get; private set; }
+        #endregion
 
+        #region Part file
         internal string FilePart0 { get; private set; }
         internal string FilePart1 { get; private set; }
         internal string FilePart2 { get; private set; }
@@ -38,7 +41,9 @@ namespace ComparisonAssistant.Model
         internal string FilePart7 { get; private set; }
         internal string FilePart8 { get; private set; }
         internal string FilePart9 { get; private set; }
+        #endregion
 
+        #region Internal properties
         internal bool EndFileXML { get; private set; }
         internal bool EndFileBSL { get; private set; }
 
@@ -46,11 +51,27 @@ namespace ComparisonAssistant.Model
 
         internal string FileNameWithoutLastPart { get; private set; }
         internal string FileNameWithoutExtension { get; private set; }
+        #endregion
 
         public ChangedFiles(string status, string fileName)
         {
             Status = status;
             FileName = fileName;
+        }
+
+        internal void CompareObject(ChangedFiles changed)
+        {
+            if (changed.ChangeModuleManaged)
+                ChangeModuleManaged = true;
+
+            if (changed.ChangeModuleObject)
+                ChangeModuleObject = true;
+
+            if (changed.ChangeObject)
+                ChangeObject = true;
+
+            if (changed.ChangeTemplate)
+                ChangeTemplate = true;
         }
 
         private void ParseFileName()
@@ -192,19 +213,5 @@ namespace ComparisonAssistant.Model
                 ChangeObject = true;
         }
 
-        internal void CompareObject(ChangedFiles changed)
-        {
-            if (changed.ChangeModuleManaged)
-                ChangeModuleManaged = true;
-
-            if (changed.ChangeModuleObject)
-                ChangeModuleObject = true;
-
-            if (changed.ChangeObject)
-                ChangeObject = true;
-
-            if (changed.ChangeTemplate)
-                ChangeTemplate = true;
-        }
     }
 }
