@@ -72,138 +72,144 @@ namespace ComparisonAssistant
             DateTime filterDateMin = DateMin == null ? DateTime.MinValue : (DateTime)DateMin;
             DateTime filterDateMax = DateMax == null || DateMax == DateTime.MinValue ? DateTime.MaxValue : (DateTime)DateMax;
 
-
-            using (StreamReader reader = new StreamReader(LogFileName))
+            try
             {
-                string rowFile;
-                bool thisCommit;
-
-                User findedUser = null;
-                string userName;
-                string[] file;
-                string fileName;
-
-                string emptyTask = "<без задачи>";
-
-                List<Task> addedTasks = new List<Task>();
-
-                #region Read file log
-                while (!reader.EndOfStream)
+                using (StreamReader reader = new StreamReader(LogFileName))
                 {
-                    rowFile = reader.ReadLine();
+                    string rowFile;
+                    bool thisCommit;
 
-                    thisCommit = new Regex(Regex.Escape(_separatorCommit)).Matches(rowFile).Count == 2;
-                    if (thisCommit)
+                    User findedUser = null;
+                    string userName;
+                    string[] file;
+                    string fileName;
+
+                    string emptyTask = "<без задачи>";
+
+                    List<Task> addedTasks = new List<Task>();
+
+                    #region Read file log
+                    while (!reader.EndOfStream)
                     {
-                        #region Read commit
-                        string[] commitParts = rowFile.Split(new string[] { _separatorCommit }, StringSplitOptions.RemoveEmptyEntries);
+                        rowFile = reader.ReadLine();
 
-                        if (commitParts.Count() == 3)
+                        thisCommit = new Regex(Regex.Escape(_separatorCommit)).Matches(rowFile).Count == 2;
+                        if (thisCommit)
                         {
-                            DateTime dateCommit;
-                            try
-                            {
-                                dateCommit = DateTime.Parse(commitParts[2]);
-                            }
-                            catch (FormatException)
-                            {
-                                dateCommit = DateTime.MinValue;
-                            }
+                            #region Read commit
+                            string[] commitParts = rowFile.Split(new string[] { _separatorCommit }, StringSplitOptions.RemoveEmptyEntries);
 
-                            if (!(filterDateMin <= dateCommit && dateCommit <= filterDateMax))
-                                continue;
-
-                            userName = commitParts[0];
-
-                            findedUser = Users.FirstOrDefault(f => f.Name == userName);
-                            if (findedUser == null)
+                            if (commitParts.Count() == 3)
                             {
-                                findedUser = new User(userName);
-                                Users.Add(findedUser);
-                            }
-
-                            MatchCollection matches = new Regex(_patternFindTaskName).Matches(commitParts[1]);
-                            if (matches.Count > 0)
-                            {
-                                foreach (Match item in matches)
+                                DateTime dateCommit;
+                                try
                                 {
-                                    AddUserTask(findedUser, item.Value, addedTasks);
+                                    dateCommit = DateTime.Parse(commitParts[2]);
+                                }
+                                catch (FormatException)
+                                {
+                                    dateCommit = DateTime.MinValue;
+                                }
+
+                                if (!(filterDateMin <= dateCommit && dateCommit <= filterDateMax))
+                                    continue;
+
+                                userName = commitParts[0];
+
+                                findedUser = Users.FirstOrDefault(f => f.Name == userName);
+                                if (findedUser == null)
+                                {
+                                    findedUser = new User(userName);
+                                    Users.Add(findedUser);
+                                }
+
+                                MatchCollection matches = new Regex(_patternFindTaskName).Matches(commitParts[1]);
+                                if (matches.Count > 0)
+                                {
+                                    foreach (Match item in matches)
+                                    {
+                                        AddUserTask(findedUser, item.Value, addedTasks);
+                                    }
+                                }
+                                else
+                                {
+                                    AddUserTask(findedUser, emptyTask, addedTasks);
                                 }
                             }
-                            else
-                            {
-                                AddUserTask(findedUser, emptyTask, addedTasks);
-                            }
+                            #endregion
                         }
-                        #endregion
-                    }
-                    else if (!string.IsNullOrWhiteSpace(rowFile))
-                    {
-                        #region Read log
-                        if (findedUser != null)
+                        else if (!string.IsNullOrWhiteSpace(rowFile))
                         {
-                            file = rowFile.Split(new string[] { "\t" }, StringSplitOptions.None);
-
-                            if (file.Count() == 2 || file.Count() == 3)
+                            #region Read log
+                            if (findedUser != null)
                             {
-                                fileName = GetNameObject(file[1]);
+                                file = rowFile.Split(new string[] { "\t" }, StringSplitOptions.None);
 
-                                if (_listSkipFiles.FirstOrDefault(f => f == fileName) == null)
+                                if (file.Count() == 2 || file.Count() == 3)
                                 {
-                                    foreach (Task addedTask in addedTasks)
+                                    fileName = GetNameObject(file[1]);
+
+                                    if (_listSkipFiles.FirstOrDefault(f => f == fileName) == null)
                                     {
-                                        if (UserTasks[findedUser].Find(f => f.Name == addedTask.Name).Files.FirstOrDefault(f => f.FileName == fileName) == null)
+                                        foreach (Task addedTask in addedTasks)
                                         {
-                                            UserTasks[findedUser].Find(f => f.Name == addedTask.Name).Files.Add(new ChangedFiles(file[0], fileName));
+                                            if (UserTasks[findedUser].Find(f => f.Name == addedTask.Name).Files.FirstOrDefault(f => f.FileName == fileName) == null)
+                                            {
+                                                UserTasks[findedUser].Find(f => f.Name == addedTask.Name).Files.Add(new ChangedFiles(file[0], fileName));
+                                            }
                                         }
                                     }
                                 }
                             }
+                            #endregion
                         }
-                        #endregion
-                    }
-                    else
-                    {
-                        findedUser = null;
-                        addedTasks.Clear();
-                    }
-                }
-                #endregion
-
-                foreach (User item in Users)
-                {
-                    UserTasks[item].Sort((a, b) => a.CompareName(b));
-                    for (int i = 0; i < UserTasks[item].Count; i++)
-                    {
-                        UserTasks[item][i].Files.Sort((a, b) => a.FileName.CompareTo(b.FileName));
-                    }
-                }
-
-                ChangedFiles elementObject;
-                foreach (User item in Users)
-                {
-                    for (int i = 0; i < UserTasks[item].Count; i++)
-                    {
-                        List<ChangedFiles> updateChangedFiles = new List<ChangedFiles>();
-                        foreach (ChangedFiles elementFile in UserTasks[item][i].Files)
+                        else
                         {
-                            if (elementFile.EndFileBSL || elementFile.EndFileXML)
-                            {
-                                elementObject = updateChangedFiles.FirstOrDefault(f => f.FileNameWithoutExtension == elementFile.FileNameWithoutLastPart);
-                                if (elementObject == null)
-                                    updateChangedFiles.Add(elementFile);
-                                else
-                                {
-                                    elementObject.CompareObject(elementFile);
-                                }
-                            }
-                            else
-                                updateChangedFiles.Add(elementFile);
+                            findedUser = null;
+                            addedTasks.Clear();
                         }
+                    }
+                    #endregion
 
-                        UserTasks[item][i].Files = updateChangedFiles;
+                    foreach (User item in Users)
+                    {
+                        UserTasks[item].Sort((a, b) => a.CompareName(b));
+                        for (int i = 0; i < UserTasks[item].Count; i++)
+                        {
+                            UserTasks[item][i].Files.Sort((a, b) => a.FileName.CompareTo(b.FileName));
+                        }
+                    }
+
+                    ChangedFiles elementObject;
+                    foreach (User item in Users)
+                    {
+                        for (int i = 0; i < UserTasks[item].Count; i++)
+                        {
+                            List<ChangedFiles> updateChangedFiles = new List<ChangedFiles>();
+                            foreach (ChangedFiles elementFile in UserTasks[item][i].Files)
+                            {
+                                if (elementFile.EndFileBSL || elementFile.EndFileXML)
+                                {
+                                    elementObject = updateChangedFiles.FirstOrDefault(f => f.FileNameWithoutExtension == elementFile.FileNameWithoutLastPart);
+                                    if (elementObject == null)
+                                        updateChangedFiles.Add(elementFile);
+                                    else
+                                    {
+                                        elementObject.CompareObject(elementFile);
+                                    }
+                                }
+                                else
+                                    updateChangedFiles.Add(elementFile);
+                            }
+
+                            UserTasks[item][i].Files = updateChangedFiles;
+                        }
                     }
                 }
+            }
+            catch (IOException)
+            {
+                Messages.Show("Не удалось прочитать файл логов. Возможно файл заблокирован другим приложением.");
             }
         }
 
